@@ -1,0 +1,2326 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <!-- generator meta tag -->
+    <!-- leave this for stats and Silex version check -->
+    <meta name="generator" content="Silex v2.2.7">
+    <!-- End of generator meta tag -->
+    <script type="text/javascript" src="//editor.silex.me/static/2.7/jquery.js" data-silex-static=""></script>
+    <script type="text/javascript" src="//editor.silex.me/static/2.7/jquery-ui.js" data-silex-static=""></script>
+    <script type="text/javascript" src="//editor.silex.me/static/2.7/pageable.js" data-silex-static=""></script>
+    <script type="text/javascript" src="//editor.silex.me/static/2.7/front-end.js" data-silex-static=""></script>
+    <link rel="stylesheet" href="//editor.silex.me/static/2.7/normalize.css" data-silex-static="">
+    <link rel="stylesheet" href="//editor.silex.me/static/2.7/front-end.css" data-silex-static="">
+
+    <style type="text/css" class="silex-style">
+        @import url('https://fonts.googleapis.com/css?family=Quintessential');
+        @import url('https://fonts.googleapis.com/css?family=Cinzel');
+        .normal {
+            font-family: arial, sans-serif;
+        }
+        
+        .nav-button {
+            line-height: 3;
+            color: #A2AC87;
+            font-size: 14px;
+            letter-spacing: 4px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-family: 'Quintessential', cursive;
+        }
+        
+        h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 50px;
+            font-weight: 100;
+            color: #444444;
+        }
+        
+        .content {
+            line-height: 2;
+            color: #444444;
+            font-size: 16px;
+        }
+        
+        .active-menu {
+            font-weight: bold;
+        }
+        
+        body.enable-mobile {
+            padding: 0;
+        }
+        /* ******************* *
+ * always visible menu */
+        
+        .silex-runtime .editable-style.nav-section {
+            position: fixed;
+            z-index: 9999;
+        }
+        
+        .silex-runtime .nav-section+.editable-style {
+            margin-top: 100px;
+        }
+        /* ******************* */
+    </style>
+    <script type="text/javascript" class="silex-script">
+        /*
+         * active menu widget for Silex
+         * create an element which links to an anchor, e.g. an element with a link to #anchor1
+         * add the css class "anchor-link" to this element
+         * create an element which is the anchor, e.g. an element with the css class "anchor1"
+         * when the user clicks on the link, the scroll slides until the element is visible
+         * when the user slides and the element is visible, the link gets a css class "active-menu"
+         */
+        $(function() {
+            var navSectionHeight = $('.nav-section').height();
+            // Cache selectors
+            var lastId,
+                // All list items
+                menuItems = $(".anchor-link"),
+                // Anchors corresponding to menu items
+                // find the name of the elements which are anchors
+                scrollItems = menuItems.map(function(){
+                    // the names are in the href attribute of the anchor links
+                    var attr = $(this).attr("data-silex-href") || $(this).attr("href");
+                    // case of a link in text field or an external link after publish
+                    $(this).find("[href]").each(function() {
+                        attr = $(this).attr("href");
+                    });
+                    // case of an "external link" before publish
+                    $(this).find("[data-silex-href]").each(function() {
+                        attr = $(this).attr("href");
+                    });
+                    // the links to anchors are expected to start with #
+                    if(attr && attr.indexOf("#") === 0) {
+                        var name = attr.substring(attr.lastIndexOf("#") + 1);
+                        // exclude page names (#!page-)
+                        if(name.indexOf("!page") !== 0) {
+                            var item = $("." + name);
+                            // check if there is a hash in the URL to scroll to the anchor at start
+                            if(window.location.hash.indexOf("#" + name) > 0) {
+                                var offsetTop = item.offset().top;
+                                $('html, body').stop().animate({
+                                    scrollTop: offsetTop - navSectionHeight
+                                }, 300);
+                            }
+                            // now find the element itself, which has the name as a css class
+                            if (item.length) { 
+                                return {
+                                    "link": this,
+                                    "item": item.get(0)
+                                };
+                            }
+                        }
+                    }
+                });
+            // Bind click handler to menu items
+            // so we can get a fancy scroll animation
+            scrollItems.each(function() {
+                var link = this.link;
+                var item = this.item;
+                $(link).click(function(e){
+                    // leave time for the page to open
+                    // and then scroll
+                    setTimeout(function() {
+                      var offsetTop = $(item).offset().top;
+                      $('html, body').stop().animate({
+                          scrollTop: offsetTop - navSectionHeight
+                      }, 300);
+                      e.preventDefault();
+                    }, 100);
+                });
+            })
+        
+            // Bind to scroll
+            $(window).scroll(function(){
+               // Get container scroll position
+               var fromTop = $(this).scrollTop();
+               // Get id of current scroll item
+               var cur = scrollItems.map(function(){
+                 if ($(this.item).offset().top <= fromTop + navSectionHeight)
+                   return this;
+               });
+               // add the css class on the current menu item
+        /*       if(fromTop < navSectionHeight) {
+                   $('.nav-section').removeClass('invisible');
+               }
+        */       $(".active-menu").removeClass("active-menu");
+               if(cur.length > 0) {
+                   cur = cur[cur.length-1];
+                   $(cur.link).addClass("active-menu");
+        /*           if(fromTop > navSectionHeight) {
+                       $('.nav-section').addClass('invisible');
+                   }
+        */       }
+            });
+        });
+    </script>
+    <style class="silex-inline-styles" type="text/css">
+        .body-initial {
+            background-color: rgba(253, 246, 235, 1);
+        }
+        
+        .silex-id-1491510574619-3 {
+            background-color: rgba(253, 246, 235, 1);
+            border-color: #000000;
+            min-width: 1000px;
+        }
+        
+        .silex-id-1491510574619-2 {
+            width: 1000px;
+            min-height: 100px;
+            top: 15px;
+            left: 250px;
+        }
+        
+        .silex-id-1491512678931-14 {
+            width: 927px;
+            background-color: transparent;
+            min-height: 70px;
+            top: 15px;
+            left: 73px;
+            border-color: #000000;
+        }
+        
+        .silex-id-1491511288894-6 {
+            width: 176px;
+            min-height: 42px;
+            top: 14px;
+            left: 0px;
+            border-color: #000000;
+            border-width: 1px 1px 1px 1px;
+            border-style: dotted;
+        }
+        
+        .silex-id-1491511582447-7 {
+            width: 142px;
+            min-height: 42px;
+            top: 14px;
+            left: 186px;
+            border-width: 1px 1px 1px 1px;
+            border-style: dotted;
+        }
+        
+        .silex-id-1491511629302-8 {
+            width: 216px;
+            min-height: 42px;
+            top: 14px;
+            left: 338px;
+            border-width: 1px 1px 1px 1px;
+            border-style: dotted;
+        }
+        
+        .silex-id-1491511629304-9 {
+            width: 142px;
+            min-height: 42px;
+            top: 14px;
+            left: 564px;
+            border-color: #000000;
+            border-width: 1px 1px 1px 1px;
+            border-style: dotted;
+        }
+        
+        .silex-id-1509569051614-0 {
+            width: 87px;
+            min-height: 42px;
+            top: 14px;
+            left: 840px;
+            border-color: #000000;
+            border-width: 1px 1px 1px 1px;
+            border-style: dotted;
+        }
+        
+        .silex-id-1509569592878-1 {
+            width: 114px;
+            min-height: 42px;
+            top: 14px;
+            left: 716px;
+            border-color: #000000;
+            border-width: 1px 1px 1px 1px;
+            border-style: dotted;
+        }
+        
+        .silex-id-1491511225781-5 {
+            width: 59px;
+            min-height: 71px;
+            top: 14px;
+            left: 8px;
+        }
+        
+        .silex-id-1491510465972-1 {
+            background-color: rgba(118, 106, 72, 1);
+            top: 140px;
+            left: 5px;
+            min-width: 1000px;
+            border-color: #000000;
+            background-image: url('../../Teutates/master/teutates_gruppe.png');
+            background-size: cover;
+            background-position: top center;
+            background-attachment: scroll;
+            background-repeat: no-repeat;
+        }
+        
+        .silex-id-1491510465971-0 {
+            width: 1000px;
+            background-color: transparent;
+            min-height: 511px;
+            top: 15px;
+            left: 627px;
+            background-size: auto;
+            background-position: center center;
+            background-attachment: scroll;
+            background-repeat: no-repeat;
+        }
+        
+        .silex-id-1491939403933-3 {
+            width: 1000px;
+            background-color: rgba(118, 106, 72, 0.42745098039215684);
+            min-height: 253px;
+            top: 118px;
+            left: 0px;
+        }
+        
+        .silex-id-1491513485462-16 {
+            width: 651px;
+            min-height: 134px;
+            top: 24px;
+            left: 192px;
+            background-color: transparent;
+        }
+        
+        .silex-id-1491514047727-17 {
+            width: 34px;
+            top: 206px;
+            left: 4px;
+            min-height: 140px;
+            background-color: rgba(118, 106, 72, 0.6666666666666666);
+        }
+        
+        @media only screen and (max-width: 480px),
+        only screen and (max-device-width: 480px) {
+            .silex-id-1491514047727-17 {
+                top: 4580px;
+                left: 178px;
+                width: 109px;
+                min-height: 68px;
+            }
+        }
+        
+        .silex-id-1491514255098-19 {
+            background-color: rgb(255, 255, 255);
+            min-width: 1000px;
+        }
+        
+        @media only screen and (max-width: 480px),
+        only screen and (max-device-width: 480px) {
+            .silex-id-1491514255098-19 {
+                top: 795px;
+                left: 0px;
+            }
+        }
+        
+        .silex-id-1491514255097-18 {
+            width: 1000px;
+            min-height: 448px;
+            top: 15px;
+            left: 304px;
+        }
+        
+        @media only screen and (max-width: 480px),
+        only screen and (max-device-width: 480px) {
+            .silex-id-1491514255097-18 {
+                min-height: 1073px;
+            }
+        }
+        
+        .silex-id-1491516513564-43 {
+            width: 356px;
+            background-color: rgb(255, 255, 255);
+            min-height: 210px;
+            top: 231px;
+            left: 0px;
+        }
+        
+        @media only screen and (max-width: 480px),
+        only screen and (max-device-width: 480px) {
+            .silex-id-1491516513564-43 {
+                top: 20px;
+                left: 79px;
+                width: 298px;
+                min-height: 173px;
+            }
+        }
+        
+        .silex-id-1509578650273-78 {
+            width: 210px;
+            min-height: 210px;
+            top: 1px;
+            left: 76px;
+        }
+        
+        .silex-id-1491516338811-42 {
+            width: 356px;
+            background-color: transparent;
+            min-height: 219px;
+            top: 7px;
+            left: 0px;
+        }
+        
+        @media only screen and (max-width: 480px),
+        only screen and (max-device-width: 480px) {
+            .silex-id-1491516338811-42 {
+                top: 184px;
+                left: 11px;
+                width: 433px;
+                min-height: 191px;
+            }
+        }
+        
+        .silex-id-1491514313632-20 {
+            width: 355px;
+            min-height: 199px;
+            top: 8px;
+            left: 0px;
+        }
+        
+        @media only screen and (max-width: 480px),
+        only screen and (max-device-width: 480px) {
+            .silex-id-1491514313632-20 {
+                top: 36px;
+                left: 11px;
+                width: 410px;
+                min-height: 191px;
+            }
+        }
+        
+        .silex-id-1509575192655-63 {
+            width: 288px;
+            min-height: 59px;
+            top: 376px;
+            left: 516px;
+            background-color: rgba(255, 219, 88, 1);
+            border-style: inset;
+            border-radius: 10px 10px 10px 10px;
+            border-width: 2px 2px 2px 2px;
+        }
+        
+        .silex-id-1509573227945-12 {
+            width: 621px;
+            min-height: 293px;
+            top: 77px;
+            left: 366px;
+        }
+        
+        .silex-id-1491515325968-26 {
+            background-color: rgb(255, 255, 255);
+            min-width: 1000px;
+            top: 1395px;
+            left: 5px;
+        }
+        
+        @media only screen and (max-width: 480px),
+        only screen and (max-device-width: 480px) {
+            .silex-id-1491515325968-26 {
+                top: 1868px;
+                left: 0px;
+            }
+        }
+        
+        .silex-id-1491515325967-25 {
+            width: 1000px;
+            min-height: 1350px;
+            top: 15px;
+            left: 304px;
+        }
+        
+        @media only screen and (max-width: 480px),
+        only screen and (max-device-width: 480px) {
+            .silex-id-1491515325967-25 {
+                min-height: 1189px;
+            }
+        }
+        
+        .silex-id-1491515513624-31 {
+            width: 22px;
+            background-color: rgb(255, 255, 255);
+            min-height: 275px;
+            top: 76px;
+            left: 500px;
+            border-width: 0 0 0 1px;
+            border-style: solid;
+        }
+        
+        .silex-id-1491515549485-32 {
+            width: 22px;
+            background-color: rgb(255, 255, 255);
+            min-height: 275px;
+            top: 407px;
+            left: 500px;
+            border-width: 0 0 0 1px;
+            border-style: solid;
+        }
+        
+        .silex-id-1491515570342-33 {
+            width: 442px;
+            background-color: rgb(255, 255, 255);
+            min-height: 20px;
+            top: 386px;
+            left: 0px;
+            border-width: 1px 0 0 0;
+            border-style: solid;
+        }
+        
+        .silex-id-1491515596629-34 {
+            width: 442px;
+            background-color: rgb(255, 255, 255);
+            min-height: 20px;
+            top: 385px;
+            left: 558px;
+            border-width: 1px 0 0 0;
+            border-style: solid;
+        }
+        
+        @media only screen and (max-width: 480px),
+        only screen and (max-device-width: 480px) {
+            .silex-id-1491515596629-34 {
+                top: 13px;
+                left: 11px;
+                width: 419px;
+                min-height: 20px;
+            }
+        }
+        
+        .silex-id-1491516663908-45 {
+            width: 459px;
+            background-color: rgb(255, 255, 255);
+            min-height: 275px;
+            top: 76px;
+            left: 0px;
+        }
+        
+        @media only screen and (max-width: 480px),
+        only screen and (max-device-width: 480px) {
+            .silex-id-1491516663908-45 {
+                top: 50px;
+                left: 11px;
+                width: 419px;
+                min-height: 290px;
+            }
+        }
+        
+        .silex-id-1509573667194-14 {
+            width: 440px;
+            min-height: 190px;
+            top: 8px;
+            left: 9px;
+        }
+        
+        .silex-id-1509573877122-16 {
+            width: 435px;
+            min-height: 65px;
+            top: 204px;
+            left: 11px;
+        }
+        
+        .silex-id-1491516734473-46 {
+            width: 459px;
+            background-color: rgb(255, 255, 255);
+            min-height: 275px;
+            top: 407px;
+            left: 0px;
+        }
+        
+        .silex-id-1509573927623-17 {
+            width: 435px;
+            min-height: 65px;
+            top: 204px;
+            left: 11px;
+        }
+        
+        .silex-id-1509574236560-26 {
+            width: 440px;
+            min-height: 190px;
+            top: 8px;
+            left: 9px;
+        }
+        
+        .silex-id-1491516774225-47 {
+            width: 459px;
+            background-color: rgb(255, 255, 255);
+            min-height: 275px;
+            top: 76px;
+            left: 540px;
+        }
+        
+        .silex-id-1509573936580-18 {
+            width: 435px;
+            min-height: 65px;
+            top: 204px;
+            left: 11px;
+        }
+        
+        .silex-id-1509574134889-20 {
+            width: 440px;
+            min-height: 190px;
+            top: 8px;
+            left: 9px;
+        }
+        
+        .silex-id-1509573794703-15 {
+            width: 1000px;
+            min-height: 59px;
+            top: 5px;
+            left: 0px;
+        }
+        
+        .silex-id-1491516807859-48 {
+            width: 459px;
+            background-color: rgb(255, 255, 255);
+            min-height: 275px;
+            top: 407px;
+            left: 540px;
+        }
+        
+        .silex-id-1509573939929-19 {
+            width: 435px;
+            min-height: 65px;
+            top: 204px;
+            left: 11px;
+        }
+        
+        .silex-id-1509574168262-22 {
+            width: 440px;
+            min-height: 190px;
+            top: 8px;
+            left: 9px;
+        }
+        
+        .silex-id-1509574323042-40 {
+            width: 459px;
+            background-color: rgb(255, 255, 255);
+            min-height: 275px;
+            top: 738px;
+            left: 0px;
+        }
+        
+        @media only screen and (max-width: 480px),
+        only screen and (max-device-width: 480px) {
+            .silex-id-1509574323042-40 {
+                top: 50px;
+                left: 11px;
+                width: 419px;
+                min-height: 290px;
+            }
+        }
+        
+        .silex-id-1509574215626-25 {
+            width: 440px;
+            min-height: 190px;
+            top: 8px;
+            left: 9px;
+        }
+        
+        .silex-id-1509574776881-55 {
+            width: 435px;
+            min-height: 65px;
+            top: 204px;
+            left: 11px;
+        }
+        
+        .silex-id-1509574332646-43 {
+            width: 459px;
+            background-color: rgb(255, 255, 255);
+            min-height: 275px;
+            top: 738px;
+            left: 540px;
+        }
+        
+        @media only screen and (max-width: 480px),
+        only screen and (max-device-width: 480px) {
+            .silex-id-1509574332646-43 {
+                top: 50px;
+                left: 11px;
+                width: 419px;
+                min-height: 290px;
+            }
+        }
+        
+        .silex-id-1509574144892-21 {
+            width: 440px;
+            min-height: 190px;
+            top: 8px;
+            left: 9px;
+        }
+        
+        .silex-id-1509574779783-56 {
+            width: 435px;
+            min-height: 65px;
+            top: 204px;
+            left: 11px;
+        }
+        
+        .silex-id-1509574334845-46 {
+            width: 459px;
+            background-color: rgb(255, 255, 255);
+            min-height: 275px;
+            top: 1069px;
+            left: 0px;
+        }
+        
+        @media only screen and (max-width: 480px),
+        only screen and (max-device-width: 480px) {
+            .silex-id-1509574334845-46 {
+                top: 50px;
+                left: 11px;
+                width: 419px;
+                min-height: 290px;
+            }
+        }
+        
+        .silex-id-1509574190818-24 {
+            width: 440px;
+            min-height: 190px;
+            top: 8px;
+            left: 9px;
+        }
+        
+        .silex-id-1509574782671-57 {
+            width: 435px;
+            min-height: 65px;
+            top: 204px;
+            left: 11px;
+        }
+        
+        .silex-id-1509574461313-49 {
+            width: 442px;
+            background-color: rgb(255, 255, 255);
+            min-height: 20px;
+            top: 717px;
+            left: 0px;
+            border-width: 1px 0 0 0;
+            border-style: solid;
+        }
+        
+        .silex-id-1509574464660-50 {
+            width: 442px;
+            background-color: rgb(255, 255, 255);
+            min-height: 20px;
+            top: 1048px;
+            left: 0px;
+            border-width: 1px 0 0 0;
+            border-style: solid;
+        }
+        
+        .silex-id-1509574481404-51 {
+            width: 442px;
+            background-color: rgb(255, 255, 255);
+            min-height: 20px;
+            top: 717px;
+            left: 558px;
+            border-width: 1px 0 0 0;
+            border-style: solid;
+        }
+        
+        .silex-id-1509574486184-52 {
+            width: 442px;
+            background-color: rgb(255, 255, 255);
+            min-height: 20px;
+            top: 1047px;
+            left: 558px;
+            border-width: 1px 0 0 0;
+            border-style: solid;
+        }
+        
+        .silex-id-1509574574081-53 {
+            width: 22px;
+            background-color: rgb(255, 255, 255);
+            min-height: 275px;
+            top: 738px;
+            left: 500px;
+            border-width: 0 0 0 1px;
+            border-style: solid;
+        }
+        
+        .silex-id-1509574641715-54 {
+            width: 22px;
+            background-color: rgb(255, 255, 255);
+            min-height: 275px;
+            top: 1067px;
+            left: 500px;
+            border-width: 0 0 0 1px;
+            border-style: solid;
+        }
+        
+        .silex-id-1491515759410-36 {
+            background-color: rgba(162, 172, 135, 1);
+            min-width: 1000px;
+            top: 2082px;
+            left: 5px;
+        }
+        
+        @media only screen and (max-width: 480px),
+        only screen and (max-device-width: 480px) {
+            .silex-id-1491515759410-36 {
+                top: 3057px;
+                left: 0px;
+            }
+        }
+        
+        .silex-id-1491515759409-35 {
+            width: 1000px;
+            min-height: 463px;
+            top: 15px;
+            left: 304px;
+        }
+        
+        @media only screen and (max-width: 480px),
+        only screen and (max-device-width: 480px) {
+            .silex-id-1491515759409-35 {
+                min-height: 758px;
+            }
+        }
+        
+        .silex-id-1491515891360-38 {
+            width: 489px;
+            min-height: 236px;
+            top: 0px;
+            left: 0px;
+        }
+        
+        .silex-id-1491515806933-37 {
+            width: 500px;
+            height: 449px;
+            background-color: transparent;
+            top: 8px;
+            left: 498px;
+        }
+        
+        @media only screen and (max-width: 480px),
+        only screen and (max-device-width: 480px) {
+            .silex-id-1491515806933-37 {
+                top: 18px;
+                left: 25px;
+                width: 405px;
+                height: 449px;
+            }
+        }
+        
+        .silex-id-1509575118673-60 {
+            top: 140px;
+            left: 5px;
+        }
+        
+        .silex-id-1509575118672-59 {
+            min-height: 609px;
+        }
+        
+        .silex-id-1509575149077-62 {
+            width: 972px;
+            min-height: 587px;
+            top: 12px;
+            left: 10px;
+        }
+        
+        .silex-id-1509578848755-80 {
+            top: 140px;
+            left: 5px;
+        }
+        
+        .silex-id-1509578848753-79 {
+            min-height: 927px;
+        }
+        
+        .silex-id-1509578869693-81 {
+            width: 660px;
+            min-height: 395px;
+            top: 5px;
+            left: 5px;
+        }
+        
+        .silex-id-1509579205625-82 {
+            width: 300px;
+            background-color: transparent;
+            min-height: 885px;
+            top: 28px;
+            left: 698px;
+        }
+        
+        .silex-id-1509579623882-83 {
+            width: 300px;
+            min-height: 250px;
+            top: 0px;
+            left: 0px;
+        }
+        
+        .silex-id-1509576420641-67 {
+            top: 140px;
+            left: 5px;
+            min-width: 1000px;
+        }
+        
+        .silex-id-1509576420640-66 {
+            width: 1000px;
+            min-height: 68px;
+            top: 15px;
+            left: 312px;
+        }
+        
+        .silex-id-1509576524496-70 {
+            width: 128px;
+            min-height: 50px;
+            top: 9px;
+            left: 469px;
+            background-color: rgba(255, 219, 88, 1);
+        }
+        
+        .silex-id-1509576444756-68 {
+            width: 122px;
+            min-height: 50px;
+            top: 9px;
+            left: 8px;
+            background-color: rgba(255, 219, 88, 1);
+        }
+        
+        .silex-id-1509576601423-74 {
+            width: 116px;
+            min-height: 50px;
+            top: 9px;
+            left: 876px;
+            background-color: rgba(255, 219, 88, 1);
+        }
+        
+        .silex-id-1509576592326-73 {
+            width: 117px;
+            min-height: 50px;
+            top: 9px;
+            left: 751px;
+            background-color: rgba(255, 219, 88, 1);
+        }
+        
+        .silex-id-1509576570715-72 {
+            width: 138px;
+            min-height: 50px;
+            top: 9px;
+            left: 605px;
+            background-color: rgba(255, 219, 88, 1);
+        }
+        
+        .silex-id-1509576536540-71 {
+            width: 174px;
+            min-height: 50px;
+            top: 9px;
+            left: 287px;
+            background-color: rgba(255, 219, 88, 1);
+        }
+        
+        .silex-id-1509576486693-69 {
+            width: 141px;
+            min-height: 50px;
+            top: 9px;
+            left: 138px;
+            background-color: rgba(255, 219, 88, 1);
+        }
+        
+        .silex-id-1491511864480-12 {
+            background-color: rgba(253, 246, 235, 1);
+            min-width: 1000px;
+            top: 3052px;
+            left: 5px;
+        }
+        
+        .silex-id-1491511864479-11 {
+            width: 1000px;
+            min-height: 68px;
+            top: 15px;
+            left: 304px;
+        }
+        
+        .silex-id-1509576103007-64 {
+            width: 100px;
+            min-height: 20px;
+            top: 8px;
+            left: 10px;
+        }
+        
+        .silex-id-1509576150812-65 {
+            width: 512px;
+            min-height: 22px;
+            top: 33px;
+            left: 9px;
+        }
+        
+        .silex-id-1509578576302-76 {
+            min-height: 100px;
+        }
+        
+        .silex-id-1509578576301-75 {
+            min-height: 100px;
+        }
+        
+        .silex-id-1509578582281-77 {
+            width: 100px;
+            min-height: 100px;
+            top: 25px;
+            left: 257px;
+        }
+    </style>
+    <title>Keltengruppe Teutates e.V.</title>
+    <script type="text/javascript" class="silex-json-styles">
+        [{"desktop":{"body-initial":{"background-color":"rgba(253,246,235,1)"},"silex-id-1474394621033-3":{"min-height":"600px","top":"5px","left":"0px"},"silex-id-1474394621032-2":{"min-height":"100px","background-color":"rgb(255, 255, 255)"},"silex-id-1474394605264-1":{"min-height":"100px","width":"100px","top":"100px","left":"100px"},"silex-id-1474394605263-0":{"min-height":"100px","background-color":"transparent"},"silex-id-1442914737143-3":{"min-height":"36px","width":"960px","top":"37px","left":"1px"},"null":{"min-width":"100px"},"silex-id-1491510465971-0":{"width":"1000px","background-color":"transparent","min-height":"511px","top":"15px","left":"627px","background-image":"","background-size":"auto","background-position":"center center","background-attachment":"scroll","background-repeat":"no-repeat","opacity":"","border-radius":""},"silex-id-1491510465972-1":{"background-color":"rgba(118,106,72,1)","top":"140px","left":"5px","min-width":"1000px","border-color":"#000000","background-image":"url('../../Teutates/master/teutates_gruppe.png')","background-size":"cover","background-position":"top center","background-attachment":"scroll","background-repeat":"no-repeat"},"silex-id-1491510574619-2":{"width":"1000px","background-color":"","min-height":"100px","top":"15px","left":"250px"},"silex-id-1491510574619-3":{"background-color":"rgba(253,246,235,1)","border-color":"#000000","min-width":"1000px"},"silex-id-1491511225781-5":{"width":"59px","min-height":"71px","top":"14px","left":"8px"},"silex-id-1491511288894-6":{"width":"176px","min-height":"42px","top":"14px","left":"0px","border-color":"#000000","border-width":"1px 1px 1px 1px ","border-style":"dotted"},"silex-id-1491511582447-7":{"width":"142px","min-height":"42px","top":"14px","left":"186px","border-width":"1px 1px 1px 1px ","border-style":"dotted"},"silex-id-1491511629302-8":{"width":"216px","min-height":"42px","top":"14px","left":"338px","border-width":"1px 1px 1px 1px ","border-style":"dotted"},"silex-id-1491511629304-9":{"width":"142px","min-height":"42px","top":"14px","left":"564px","border-color":"#000000","border-width":"1px 1px 1px 1px ","border-style":"dotted"},"silex-id-1491511864479-11":{"width":"1000px","background-color":"","min-height":"68px","top":"15px","left":"304px"},"silex-id-1491511864480-12":{"background-color":"rgba(253,246,235,1)","min-width":"1000px","top":"3052px","left":"5px"},"silex-id-1491512678931-14":{"width":"927px","background-color":"transparent","min-height":"70px","top":"15px","left":"73px","border-color":"#000000","border-width":"","border-style":""},"silex-id-1491513485462-16":{"width":"651px","min-height":"134px","top":"24px","left":"192px","background-color":"transparent"},"silex-id-1491514047727-17":{"width":"34px","top":"206px","left":"4px","min-height":"140px","background-color":"rgba(118,106,72,0.6666666666666666)"},"silex-id-1491514255097-18":{"width":"1000px","background-color":"","min-height":"448px","top":"15px","left":"304px"},"silex-id-1491514255098-19":{"background-color":"rgb(255, 255, 255)","min-width":"1000px"},"silex-id-1491514313632-20":{"width":"355px","min-height":"199px","top":"8px","left":"0px"},"silex-id-1491515247116-23":{"width":"1000px","background-color":"transparent","min-height":"620px","top":"15px","left":"250px","background-image":"","background-attachment":"fixed","background-size":"cover"},"silex-id-1491515325967-25":{"width":"1000px","background-color":"","min-height":"1350px","top":"15px","left":"304px"},"silex-id-1491515325968-26":{"background-color":"rgb(255, 255, 255)","min-width":"1000px","top":"1395px","left":"5px"},"silex-id-1491515513624-31":{"width":"22px","background-color":"rgb(255, 255, 255)","min-height":"275px","top":"76px","left":"500px","border-width":"0 0 0 1px ","border-style":"solid"},"silex-id-1491515549485-32":{"width":"22px","background-color":"rgb(255, 255, 255)","min-height":"275px","top":"407px","left":"500px","border-width":"0 0 0 1px ","border-style":"solid"},"silex-id-1491515570342-33":{"width":"442px","background-color":"rgb(255, 255, 255)","min-height":"20px","top":"386px","left":"0px","border-width":"1px 0 0 0 ","border-style":"solid"},"silex-id-1491515596629-34":{"width":"442px","background-color":"rgb(255, 255, 255)","min-height":"20px","top":"385px","left":"558px","border-width":"1px 0 0 0 ","border-style":"solid"},"silex-id-1491515759409-35":{"width":"1000px","background-color":"","min-height":"463px","top":"15px","left":"304px"},"silex-id-1491515759410-36":{"background-color":"rgba(162,172,135,1)","min-width":"1000px","top":"2082px","left":"5px"},"silex-id-1491515806933-37":{"width":"500px","height":"449px","background-color":"transparent","top":"8px","left":"498px"},"silex-id-1491515891360-38":{"width":"489px","min-height":"236px","top":"0px","left":"0px"},"silex-id-1491516086959-39":{"width":"1000px","background-color":"","min-height":"572px","top":"15px","left":"627px"},"silex-id-1491516112703-41":{"height":"498px","width":"893px","background-color":"transparent","top":"0px","left":"33px"},"silex-id-1491516338811-42":{"width":"356px","background-color":"transparent","min-height":"219px","top":"7px","left":"0px"},"silex-id-1491516513564-43":{"width":"356px","background-color":"rgb(255, 255, 255)","min-height":"210px","top":"231px","left":"0px"},"silex-id-1491516663908-45":{"width":"459px","background-color":"rgb(255, 255, 255)","min-height":"275px","top":"76px","left":"0px"},"silex-id-1491516734473-46":{"width":"459px","background-color":"rgb(255, 255, 255)","min-height":"275px","top":"407px","left":"0px"},"silex-id-1491516774225-47":{"width":"459px","background-color":"rgb(255, 255, 255)","min-height":"275px","top":"76px","left":"540px"},"silex-id-1491516807859-48":{"width":"459px","background-color":"rgb(255, 255, 255)","min-height":"275px","top":"407px","left":"540px"},"silex-id-1491517444228-49":{"width":"1000px","background-color":"","min-height":"1138px","top":"15px","left":"250px"},"silex-id-1491517451740-51":{"width":"587px","min-height":"100px","top":"100px","left":"209px"},"silex-id-1491938775185-1":{"width":"955px","background-color":"transparent","min-height":"533px","top":"0px","left":"16px"},"silex-id-1491939403933-3":{"width":"1000px","background-color":"rgba(118,106,72,0.42745098039215684)","min-height":"253px","top":"118px","left":"0px"},"silex-id-1509569051614-0":{"width":"87px","min-height":"42px","top":"14px","left":"840px","border-color":"#000000","border-width":"1px 1px 1px 1px ","border-style":"dotted"},"silex-id-1509569592878-1":{"width":"114px","min-height":"42px","top":"14px","left":"716px","border-color":"#000000","border-width":"1px 1px 1px 1px ","border-style":"dotted"},"silex-id-1509572612284-4":{"width":"","background-color":"","min-height":"100px"},"silex-id-1509572652550-6":{"width":"","background-color":"","min-height":"100px"},"silex-id-1509572992668-10":{"width":"607px","min-height":"579px","top":"8px","left":"8px"},"silex-id-1509573227945-12":{"width":"621px","min-height":"293px","top":"77px","left":"366px"},"silex-id-1509573667194-14":{"width":"440px","min-height":"190px","top":"8px","left":"9px"},"silex-id-1509573794703-15":{"width":"1000px","min-height":"59px","top":"5px","left":"0px"},"silex-id-1509573877122-16":{"width":"435px","min-height":"65px","top":"204px","left":"11px"},"silex-id-1509573927623-17":{"width":"435px","min-height":"65px","top":"204px","left":"11px"},"silex-id-1509573936580-18":{"width":"435px","min-height":"65px","top":"204px","left":"11px"},"silex-id-1509573939929-19":{"width":"435px","min-height":"65px","top":"204px","left":"11px"},"silex-id-1509574134889-20":{"width":"440px","min-height":"190px","top":"8px","left":"9px"},"silex-id-1509574144892-21":{"width":"440px","min-height":"190px","top":"8px","left":"9px"},"silex-id-1509574168262-22":{"width":"440px","min-height":"190px","top":"8px","left":"9px"},"silex-id-1509574190818-24":{"width":"440px","min-height":"190px","top":"8px","left":"9px"},"silex-id-1509574215626-25":{"width":"440px","min-height":"190px","top":"8px","left":"9px"},"silex-id-1509574236560-26":{"width":"440px","min-height":"190px","top":"8px","left":"9px"},"silex-id-1509574312721-32":{"width":"440px","min-height":"190px","top":"8px","left":"9px"},"silex-id-1509574312722-33":{"width":"435px","min-height":"65px","top":"204px","left":"11px"},"silex-id-1509574312725-35":{"width":"435px","min-height":"65px","top":"204px","left":"11px"},"silex-id-1509574312728-37":{"width":"435px","min-height":"65px","top":"204px","left":"11px"},"silex-id-1509574312731-39":{"width":"435px","min-height":"65px","top":"204px","left":"11px"},"silex-id-1509574323042-41":{"width":"440px","min-height":"190px","top":"8px","left":"9px"},"silex-id-1509574323042-42":{"width":"435px","min-height":"65px","top":"204px","left":"11px"},"silex-id-1509574323042-40":{"width":"459px","background-color":"rgb(255, 255, 255)","min-height":"275px","top":"738px","left":"0px"},"silex-id-1509574332646-44":{"width":"440px","min-height":"190px","top":"8px","left":"9px"},"silex-id-1509574332647-45":{"width":"435px","min-height":"65px","top":"204px","left":"11px"},"silex-id-1509574332646-43":{"width":"459px","background-color":"rgb(255, 255, 255)","min-height":"275px","top":"738px","left":"540px"},"silex-id-1509574334845-47":{"width":"440px","min-height":"190px","top":"8px","left":"9px"},"silex-id-1509574334846-48":{"width":"435px","min-height":"65px","top":"204px","left":"11px"},"silex-id-1509574334845-46":{"width":"459px","background-color":"rgb(255, 255, 255)","min-height":"275px","top":"1069px","left":"0px"},"silex-id-1509574461313-49":{"width":"442px","background-color":"rgb(255, 255, 255)","min-height":"20px","top":"717px","left":"0px","border-width":"1px 0 0 0 ","border-style":"solid"},"silex-id-1509574464660-50":{"width":"442px","background-color":"rgb(255, 255, 255)","min-height":"20px","top":"1048px","left":"0px","border-width":"1px 0 0 0 ","border-style":"solid"},"silex-id-1509574481404-51":{"width":"442px","background-color":"rgb(255, 255, 255)","min-height":"20px","top":"717px","left":"558px","border-width":"1px 0 0 0 ","border-style":"solid"},"silex-id-1509574486184-52":{"width":"442px","background-color":"rgb(255, 255, 255)","min-height":"20px","top":"1047px","left":"558px","border-width":"1px 0 0 0 ","border-style":"solid"},"silex-id-1509574574081-53":{"width":"22px","background-color":"rgb(255, 255, 255)","min-height":"275px","top":"738px","left":"500px","border-width":"0 0 0 1px ","border-style":"solid"},"silex-id-1509574641715-54":{"width":"22px","background-color":"rgb(255, 255, 255)","min-height":"275px","top":"1067px","left":"500px","border-width":"0 0 0 1px ","border-style":"solid"},"silex-id-1509574776881-55":{"width":"435px","min-height":"65px","top":"204px","left":"11px"},"silex-id-1509574779783-56":{"width":"435px","min-height":"65px","top":"204px","left":"11px"},"silex-id-1509574782671-57":{"width":"435px","min-height":"65px","top":"204px","left":"11px"},"silex-id-1509575118672-59":{"width":"","background-color":"","min-height":"609px"},"silex-id-1509575118673-60":{"top":"140px","left":"5px"},"silex-id-1509575149077-62":{"width":"972px","min-height":"587px","top":"12px","left":"10px"},"silex-id-1509575192655-63":{"width":"288px","min-height":"59px","top":"376px","left":"516px","background-color":"rgba(255,219,88,1)","border-style":"inset","border-radius":"10px 10px 10px 10px ","border-width":"2px 2px 2px 2px "},"silex-id-1509576103007-64":{"width":"100px","min-height":"20px","top":"8px","left":"10px"},"silex-id-1509576150812-65":{"width":"512px","min-height":"22px","top":"33px","left":"9px"},"silex-id-1509576420640-66":{"width":"1000px","background-color":"","min-height":"68px","top":"15px","left":"312px"},"silex-id-1509576420641-67":{"top":"140px","left":"5px","min-width":"1000px"},"silex-id-1509576444756-68":{"width":"122px","min-height":"50px","top":"9px","left":"8px","background-color":"rgba(255,219,88,1)"},"silex-id-1509576486693-69":{"width":"141px","min-height":"50px","top":"9px","left":"138px","background-color":"rgba(255,219,88,1)"},"silex-id-1509576524496-70":{"width":"128px","min-height":"50px","top":"9px","left":"469px","background-color":"rgba(255,219,88,1)"},"silex-id-1509576536540-71":{"width":"174px","min-height":"50px","top":"9px","left":"287px","background-color":"rgba(255,219,88,1)"},"silex-id-1509576570715-72":{"width":"138px","min-height":"50px","top":"9px","left":"605px","background-color":"rgba(255,219,88,1)"},"silex-id-1509576592326-73":{"width":"117px","min-height":"50px","top":"9px","left":"751px","background-color":"rgba(255,219,88,1)"},"silex-id-1509576601423-74":{"width":"116px","min-height":"50px","top":"9px","left":"876px","background-color":"rgba(255,219,88,1)"},"silex-id-1509578576301-75":{"width":"","background-color":"","min-height":"100px"},"silex-id-1509578576302-76":{"min-height":"100px"},"silex-id-1509578582281-77":{"width":"100px","min-height":"100px","top":"25px","left":"257px"},"silex-id-1509578650273-78":{"width":"210px","min-height":"210px","top":"1px","left":"76px"},"silex-id-1509578848753-79":{"width":"","background-color":"","min-height":"927px"},"silex-id-1509578848755-80":{"top":"140px","left":"5px"},"silex-id-1509578869693-81":{"width":"660px","min-height":"395px","top":"5px","left":"5px"},"silex-id-1509579205625-82":{"width":"300px","background-color":"transparent","min-height":"885px","top":"28px","left":"698px"},"silex-id-1509579623882-83":{"width":"300px","min-height":"250px","top":"0px","left":"0px"}},"mobile":{"silex-id-1491515759410-36":{"top":"3057px","left":"0px"},"silex-id-1491515759409-35":{"min-height":"758px"},"silex-id-1491514047727-17":{"top":"4580px","left":"178px","width":"109px","min-height":"68px"},"silex-id-1491515247116-23":{"min-height":"20px"},"silex-id-1491514255097-18":{"min-height":"1073px"},"silex-id-1491514255098-19":{"top":"795px","left":"0px"},"silex-id-1491515325968-26":{"top":"1868px","left":"0px"},"silex-id-1491515325967-25":{"min-height":"1189px"},"silex-id-1491515596629-34":{"top":"13px","left":"11px","width":"419px","min-height":"20px"},"silex-id-1491516663908-45":{"top":"50px","left":"11px","width":"419px","min-height":"290px"},"silex-id-1491516513564-43":{"top":"20px","left":"79px","width":"298px","min-height":"173px"},"silex-id-1491516338811-42":{"top":"184px","left":"11px","width":"433px","min-height":"191px"},"silex-id-1491514313632-20":{"top":"36px","left":"11px","width":"410px","min-height":"191px"},"silex-id-1491515806933-37":{"top":"18px","left":"25px","width":"405px","height":"449px"},"silex-id-1491516112703-41":{"top":"89px","left":"11px","width":"433px","height":"372px"},"silex-id-1491516086959-39":{"min-height":"407px"},"silex-id-1509574323042-40":{"top":"50px","left":"11px","width":"419px","min-height":"290px"},"silex-id-1509574332646-43":{"top":"50px","left":"11px","width":"419px","min-height":"290px"},"silex-id-1509574334845-46":{"top":"50px","left":"11px","width":"419px","min-height":"290px"}},"componentData":{"silex-id-1491514047727-17":{"name":"share1","templateName":"share","networks":["Facebook","Twitter","Email"],"url":"//silex-templates.silex.me/beauty/index.html","title":"Share","description":"Beauty Saloon Template","style":"Flat Web Icon Set - Color","twitter":""},"silex-id-1491515806933-37":{"name":"form1","templateName":"form","field2":true,"labelTextColor":"#ffffff","buttonBackgroundColor":"#3093b2","sendTo":"info@teutatesnet.de","submitButtonLabel":"Absenden","placeholder1":"Ihr Name","label2":"Email-Adresse","placeholder2":"Ihre Emailadresse","label3":"Nachricht","placeholder3":"Was möchten Sie uns mitteilen?"},"silex-id-1491516112703-41":{"name":"map1","templateName":"map","url":"//www.openstreetmap.org/#map=18/48.87378/2.29489&layers=C"},"silex-id-1491516338811-42":{"name":"animated-container1","templateName":"animated-container","scale":"1"},"silex-id-1491516513564-43":{"name":"animated-container2","templateName":"animated-container","scale":"1","origin":"bottom","rotateX":"0","rotateZ":"0","rotateY":"100","distance":"0px","opacity":"-1"},"silex-id-1491516663908-45":{"name":"animated-container4","templateName":"animated-container","scale":"1","origin":"left","distance":"20px"},"silex-id-1491516734473-46":{"name":"animated-container5","templateName":"animated-container","scale":"1","origin":"bottom"},"silex-id-1491516774225-47":{"name":"animated-container6","templateName":"animated-container","origin":"right","distance":"20px","scale":"1"},"silex-id-1491516807859-48":{"name":"animated-container7","templateName":"animated-container","origin":"bottom","scale":"1"},"silex-id-1491938775185-1":{"name":"animated-container8","templateName":"animated-container","distance":"0px","scale":"1","opacity":"0","duration":"500","delay":"1000"},"silex-id-1491939403933-3":{"name":"animated-container9","templateName":"animated-container","distance":"0px","delay":"1500","duration":"1500","easing":"ease","opacity":"0","scale":"0.99"},"silex-id-1509574323042-40":{"name":"animated-container4","templateName":"animated-container","scale":"1","origin":"left","distance":"20px"},"silex-id-1509574332646-43":{"name":"animated-container4","templateName":"animated-container","scale":"1","origin":"left","distance":"20px"},"silex-id-1509574334845-46":{"name":"animated-container4","templateName":"animated-container","scale":"1","origin":"left","distance":"20px"}}}]
+    </script>
+
+
+
+
+
+
+
+
+
+    <meta name="website-width" content="1000">
+    <style type="text/css" class="silex-style-settings">
+        .website-width {
+            width: 1000px;
+        }
+    </style>
+
+
+    <script src="https://unpkg.com/scrollreveal/dist/scrollreveal.min.js" data-dependency=""></script>
+
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2.2" data-silex-viewport="">
+    <meta name="publicationPath" content="/api/1.0/github/exec/put/silex-templates/wip/beauty">
+
+    <meta name="description" content="Keltengruppe Reenactment Teutates Historisch ">
+    <link href="../../../../../../../teutates_logo_bronze2_mini.gif" rel="shortcut icon">
+
+
+
+
+
+    <meta name="twitter:title" content="Keltengruppe Teutates e.V.">
+    <meta name="og:title" content="Keltengruppe Teutates e.V.">
+    <meta name="twitter:description" content="Die Seite der Keltengruppe Teutates e.V.">
+    <meta name="og:description" content="Die Seite der Keltengruppe Teutates e.V.">
+
+    <script src="//editor.silex.me/static/2.7/unslider/unslider-min.js" data-silex-static="" data-dependency=""></script>
+    <link rel="stylesheet" href="//editor.silex.me/static/2.7/unslider/unslider.css" data-silex-static="" data-dependency="">
+
+
+
+
+    <meta name="twitter:card" content="summary">
+    <style id="current-page-style">
+        .page-home {
+            display: inherit;
+        }
+    </style>
+    <!-- Silex HEAD tag do not remove -->
+    <!-- End of Silex HEAD tag do not remove -->
+</head>
+
+<body data-silex-id="body-initial" class="body-initial enable-mobile silex-runtime" data-silex-type="container">
+    <div data-silex-type="container" class="prevent-draggable container-element editable-style silex-id-1491510574619-3 section-element nav-section" data-silex-id="silex-id-1491510574619-3">
+        <div data-silex-type="container" class="editable-style silex-id-1491510574619-2 container-element silex-element-content silex-container-content website-width prevent-draggable" data-silex-id="silex-id-1491510574619-2">
+
+
+            <div data-silex-type="container" class="editable-style silex-id-1491512678931-14 container-element hide-on-mobile" data-silex-id="silex-id-1491512678931-14">
+
+
+
+
+
+                <div data-silex-type="text" class="editable-style silex-id-1491511288894-6 text-element nav-button anchor-link" data-silex-id="silex-id-1491511288894-6" style="">
+                    <div class="silex-element-content normal">KELTENGRUPPE</div>
+                </div>
+                <div data-silex-type="text" class="editable-style text-element silex-id-1491511582447-7 nav-button anchor-link page-link-active" data-silex-id="silex-id-1491511582447-7" data-silex-href="#!page-home#about" style="">
+                    <div class="silex-element-content normal">HANDWERKE</div>
+                </div>
+                <div data-silex-type="text" class="editable-style text-element silex-id-1491511629302-8 nav-button anchor-link page-link-active" data-silex-id="silex-id-1491511629302-8" data-silex-href="#!page-home#service" style="">
+                    <div class="silex-element-content normal">VERANSTALTUNGEN</div>
+                </div>
+                <div data-silex-type="text" class="editable-style text-element silex-id-1491511629304-9 nav-button anchor-link page-link-active" data-silex-id="silex-id-1491511629304-9" data-silex-href="#!page-home#contact" style="">
+                    <div class="silex-element-content normal">GALERIE</div>
+                </div>
+                <div data-silex-type="text" class="editable-style text-element nav-button anchor-link silex-id-1509569051614-0" data-silex-id="silex-id-1509569051614-0" data-silex-href="#!page-links" style="">
+                    <div class="silex-element-content normal">LINKS</div>
+                </div>
+                <div data-silex-type="text" class="editable-style text-element nav-button anchor-link silex-id-1509569592878-1" data-silex-id="silex-id-1509569592878-1" style="">
+                    <div class="silex-element-content normal">KONTAKT</div>
+                </div>
+            </div>
+            <div data-silex-type="image" class="editable-style silex-id-1491511225781-5 image-element page-link-active" data-silex-id="silex-id-1491511225781-5" data-silex-href="#!page-home" style=""><img src="../../Teutates/master/teutates_logo_bronze2_mini.gif" class="silex-element-content"></div>
+        </div>
+    </div>
+    <div data-silex-type="container" class="prevent-draggable container-element editable-style silex-id-1491510465972-1 section-element page-home paged-element home" data-silex-id="silex-id-1491510465972-1">
+        <div data-silex-type="container" class="editable-style silex-id-1491510465971-0 container-element silex-element-content silex-container-content website-width prevent-draggable" data-silex-id="silex-id-1491510465971-0">
+
+            <div data-silex-type="container" class="editable-style silex-id-1491939403933-3 container-element silex-component silex-component-animated-container" data-silex-id="silex-id-1491939403933-3">
+                <div id="id_1491939479270_560"></div>
+                <script type="text/javascript">
+                    /*
+                    animation widget from here: https://github.com/silexlabs/Silex/issues/443
+                    */
+                    $(function() {
+                      var bodyEl = $('body');
+                      // execute only outside silex editor
+                      if(!bodyEl.hasClass('silex-runtime')) return;
+                      // init ScrollReveal lib
+                      window.sr = window.sr || ScrollReveal();
+                      // animate this element on page change
+                      bodyEl.on('pageChanged', animate_1491939479270_560);
+                      // animate this element at start
+                      animate_1491939479270_560();
+                      // the function to start the animation
+                      function animate_1491939479270_560 (event, pageName) {
+                        // get the silex element in which we are
+                        var silexElement = $('#id_1491939479270_560').parent();
+                        if(// only if the element is in the dom
+                          silexElement &&
+                          // and is visible in the current page
+                          (silexElement.hasClass(bodyEl.pageable('option').currentPage) ||
+                          // or visible in all pages
+                          !silexElement.hasClass('paged-element')) &&
+                          // but never in mobile mode
+                          (!bodyEl.hasClass('enable-mobile') || $(window).width() >= 480)) {
+                          // use ScrollReveal API
+                          sr.reveal(silexElement, {
+                            origin:  'left',
+                            distance: '0px',
+                            duration: 1500,
+                            delay: 1500,
+                            rotate: { x: 0, y: 0, z: 0 },
+                            opacity: 0,
+                            scale: 0.99,
+                            easing: 'ease',
+                            reset: false,
+                            beforeReveal: function(el){
+                              
+                            },
+                            beforeReset: function(el){
+                              
+                            },
+                            afterReveal: function(el){
+                              
+                            },
+                            afterReset: function(el){
+                              
+                            }
+                          });
+                        }
+                      }
+                    })
+                </script>
+                <div data-silex-type="text" class="editable-style silex-id-1491513485462-16 text-element title" data-silex-id="silex-id-1491513485462-16">
+                    <div class="silex-element-content normal">
+                        <h1 style="text-align: center;">
+                            <font color="#ffffff" size="7" face="arial, sans-serif"><i style="">Die Vergangenheit<br></i></font>
+                        </h1>
+                        <h1 style="text-align: center;">
+                            <font color="#ffffff" size="7" face="arial, sans-serif"><i style="" class="heading1">erlebbar gemacht...</i></font>
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div data-silex-type="html" class="editable-style silex-id-1491514047727-17 html-element silex-component silex-component-share" data-silex-id="silex-id-1491514047727-17">
+            <div class="silex-element-content">
+                <ul class="share-buttons" id="id_1509570564458_357">
+
+                    <li>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=//silex-templates.silex.me/beauty/index.html&amp;t=Share" title="Share on Facebook" target="_blank"><img alt="Share on Facebook" data-silex-static="" src="//editor.silex.me/static/2.7/simplesharingbuttons/flat_web_icon_set/color/Facebook.png"></a>
+                    </li>
+
+
+                    <li>
+                        <a href="https://twitter.com/intent/tweet?source=//silex-templates.silex.me/beauty/index.html&amp;text=Share:%20//silex-templates.silex.me/beauty/index.html&amp;via=" target="_blank" title="Share on Twitter"><img alt="Twitt" data-silex-static="" src="//editor.silex.me/static/2.7/simplesharingbuttons/flat_web_icon_set/color/Twitter.png"></a>
+                    </li>
+
+
+
+
+
+
+
+
+
+
+                    <li>
+                        <a href="mailto:?subject=Share&amp;body=Beauty%20Saloon%20Template:%20/silex-templates.silex.me/beauty/index.html" target="_blank" title="Send email"><img alt="Send by email" data-silex-static="" src="//editor.silex.me/static/2.7/simplesharingbuttons/flat_web_icon_set/color/Email.png"></a>
+                    </li>
+
+                </ul>
+
+                <style type="text/css">
+                    #id_1509570564458_357.share-buttons {
+                        list-style: none;
+                        padding: 0;
+                    }
+                    
+                    #id_1509570564458_357.share-buttons li {
+                        display: inline;
+                    }
+                    
+                    #id_1509570564458_357.share-buttons .sr-only {
+                        position: absolute;
+                        clip: rect(1px 1px 1px 1px);
+                        clip: rect(1px, 1px, 1px, 1px);
+                        padding: 0;
+                        border: 0;
+                        height: 1px;
+                        width: 1px;
+                        overflow: hidden;
+                    }
+                </style>
+            </div>
+        </div>
+    </div>
+
+    <div class="silex-pages">
+        <div data-silex-type="image" class="editable-style silex-id-hamburger-menu image-element menu-button prevent-draggable prevent-resizable" data-silex-id="silex-id-hamburger-menu">
+            <img alt="open mobile menu" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAoCAYAAAC8cqlMAAAB5UlEQVR42u2ZPWvCUBSGM+UfFO3e3dLu/QN+oKj4EUXRQREEJYgoiCAu6qCogyDo7iJ21UUaKqEgCC4iiEMGB3UVgsnpTWj/wfVK2nvhGbKEPJyT996TMMzPGg6H5mKx+GgkyuWyeTQasb8OTDwef4tEIp8+n+/LYIjJZJJHQiwzm81M6OLDarWqNpsNjEYgEJCy2ewT0+/3TagighElNFAnQT6ft1ARKkJFqMgfFvF4PFpuEwFtdrcRqVarIIoirFYrIiyXSxiPx+B2u/GJBINBuF6vQHopigK1Wg2fCMdxcLlciIuoqgqNRgOfiN1uB3Qwg91uB8fjkQiHwwEmkwne1qLxS0VuKKJle71eh06nQ4Rmswk8z+MVcTqdsNlsQJZlotF7Pp8hk8ngE4lGo/qN7xG/vV4Pb0Xm8zlxkdPpBGgMx/+yJxIJKBQKRMjlcuBwOGhq/Q+RcDgMsViMCFrAuFwu/CKDwQC22y1IkkSE/X4PgiDo+xc2Ea0S9zjGa/Hb7Xbxifj9fj0K7yFSqVTwtlY6nYbpdKpPiSRYLBbQarX0PYymFhWhIlSEilCRW6GdyUqlkoVZr9dsKpXiOY6TtW+7BkNBz/7ebrcf9L+6Xq+XRYPMMyrTq5EIhUIvaAjTJb4BBNQ2yhnth0wAAAAASUVORK5CYII="
+                class="silex-element-content">
+        </div>
+
+        <a id="page-home" data-silex-type="page" class="page-element page-link-active">Home</a><a id="page-die-kelten" data-silex-type="page" class="page-element">Die Kelten</a><a id="page-f-rben" data-silex-type="page" class="page-element">Färben</a>
+        <a id="page-brettchenweben" data-silex-type="page" class="page-element">Brettchenweben</a><a id="page-kettenhemdherstellung" data-silex-type="page" class="page-element">Kettenhemdherstellung</a><a id="page-gewichtweben" data-silex-type="page"
+            class="page-element">Gewichtweben</a><a id="page-t-pfern" data-silex-type="page" class="page-element">Töpfern</a><a id="page-metallarbeiten" data-silex-type="page" class="page-element">Metallarbeiten</a><a id="page-bronzeguss" data-silex-type="page"
+            class="page-element">Bronzeguss</a><a id="page-links" data-silex-type="page" class="page-element">Links</a><a id="page-galerie" data-silex-type="page" class="page-element">Galerie</a><a id="page-impressum" data-silex-type="page" class="page-element">Impressum</a></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div data-silex-type="container" class="prevent-draggable container-element editable-style silex-id-1491514255098-19 section-element page-home paged-element about" data-silex-id="silex-id-1491514255098-19">
+        <div data-silex-type="container" class="editable-style silex-id-1491514255097-18 container-element silex-element-content silex-container-content website-width prevent-draggable" data-silex-id="silex-id-1491514255097-18">
+
+
+
+
+            <div data-silex-type="container" class="editable-style silex-id-1491516513564-43 container-element silex-component silex-component-animated-container" data-silex-id="silex-id-1491516513564-43">
+                <div id="id_1491938633958_664"></div>
+                <script type="text/javascript">
+                    /*
+                    animation widget from here: https://github.com/silexlabs/Silex/issues/443
+                    */
+                    $(function() {
+                      var bodyEl = $('body');
+                      // execute only outside silex editor
+                      if(!bodyEl.hasClass('silex-runtime')) return;
+                      // init ScrollReveal lib
+                      window.sr = window.sr || ScrollReveal();
+                      // animate this element on page change
+                      bodyEl.on('pageChanged', animate_1491938633958_664);
+                      // animate this element at start
+                      animate_1491938633958_664();
+                      // the function to start the animation
+                      function animate_1491938633958_664 (event, pageName) {
+                        // get the silex element in which we are
+                        var silexElement = $('#id_1491938633958_664').parent();
+                        if(// only if the element is in the dom
+                          silexElement &&
+                          // and is visible in the current page
+                          (silexElement.hasClass(bodyEl.pageable('option').currentPage) ||
+                          // or visible in all pages
+                          !silexElement.hasClass('paged-element')) &&
+                          // but never in mobile mode
+                          (!bodyEl.hasClass('enable-mobile') || $(window).width() >= 480)) {
+                          // use ScrollReveal API
+                          sr.reveal(silexElement, {
+                            origin:  'bottom',
+                            distance: '0px',
+                            duration: 500,
+                            delay: 0,
+                            rotate: { x: 0, y: 100, z: 0 },
+                            opacity: -1,
+                            scale: 1,
+                            easing: 'linear',
+                            reset: false,
+                            beforeReveal: function(el){
+                              
+                            },
+                            beforeReset: function(el){
+                              
+                            },
+                            afterReveal: function(el){
+                              
+                            },
+                            afterReset: function(el){
+                              
+                            }
+                          });
+                        }
+                      }
+                    })
+                </script>
+
+                <div data-silex-type="image" class="editable-style silex-id-1509578650273-78 image-element" data-silex-id="silex-id-1509578650273-78" style=""><img src="../../Teutates/master/teutates_logo_bronze.gif" class="silex-element-content"></div>
+            </div>
+            <div data-silex-type="container" class="editable-style silex-id-1491516338811-42 container-element silex-component silex-component-animated-container" data-silex-id="silex-id-1491516338811-42">
+                <div id="id_1491516496248_744"></div>
+                <script type="text/javascript">
+                    /*
+                    animation widget from here: https://github.com/silexlabs/Silex/issues/443
+                    */
+                    $(function() {
+                      var bodyEl = $('body');
+                      // execute only outside silex editor
+                      if(!bodyEl.hasClass('silex-runtime')) return;
+                      // init ScrollReveal lib
+                      window.sr = window.sr || ScrollReveal();
+                      // animate this element on page change
+                      bodyEl.on('pageChanged', animate_1491516496248_744);
+                      // animate this element at start
+                      animate_1491516496248_744();
+                      // the function to start the animation
+                      function animate_1491516496248_744 (event, pageName) {
+                        // get the silex element in which we are
+                        var silexElement = $('#id_1491516496248_744').parent();
+                        if(// only if the element is in the dom
+                          silexElement &&
+                          // and is visible in the current page
+                          (silexElement.hasClass(bodyEl.pageable('option').currentPage) ||
+                          // or visible in all pages
+                          !silexElement.hasClass('paged-element')) &&
+                          // but never in mobile mode
+                          (!bodyEl.hasClass('enable-mobile') || $(window).width() >= 480)) {
+                          // use ScrollReveal API
+                          sr.reveal(silexElement, {
+                            origin:  'left',
+                            distance: '20px',
+                            duration: 500,
+                            delay: 0,
+                            rotate: { x: 0, y: 0, z: 0 },
+                            opacity: 0,
+                            scale: 1,
+                            easing: 'linear',
+                            reset: false,
+                            beforeReveal: function(el){
+                              
+                            },
+                            beforeReset: function(el){
+                              
+                            },
+                            afterReveal: function(el){
+                              
+                            },
+                            afterReset: function(el){
+                              
+                            }
+                          });
+                        }
+                      }
+                    })
+                </script>
+
+                <div data-silex-type="text" class="editable-style silex-id-1491514313632-20 text-element" data-silex-id="silex-id-1491514313632-20" style="">
+                    <div class="silex-element-content normal">
+                        <h2 class="heading2" style="text-align: center;">
+                            <font face="arial, sans-serif" class="heading2">Keltengruppe Teutates e.V.</font>
+                        </h2>
+                    </div>
+                </div>
+            </div>
+
+            <div data-silex-type="text" class="editable-style silex-id-1509575192655-63 text-element" data-silex-id="silex-id-1509575192655-63" style="" data-silex-href="#!page-die-kelten">
+                <div class="silex-element-content normal">
+                    <h3 style="text-align: center;" class="heading3">Mehr über die Kelten erfahren</h3>
+                </div>
+            </div>
+            <div data-silex-type="text" class="editable-style silex-id-1509573227945-12 text-element" data-silex-id="silex-id-1509573227945-12" style="">
+                <div class="silex-element-content normal">
+                    <div><span style="font-family: monospace; white-space: pre-wrap;">Bevor Cäsar in Gallien einfiel, lebten die Kelten in ihrer Tradition der Stämme, ihrer Religion und ihrer Gesetze. Diese Tradition möchten wir als Keltengruppe Teutates wieder aufleben lassen.</span></div>
+                    <div><span style="font-family: monospace; white-space: pre-wrap;"><br></span></div>
+                    <div><span style="font-family: monospace; white-space: pre-wrap;">Auf regelmäßigen Lagern wird von unseren Handwerkern alles hergestellt, was zum Leben und Kämpfen benötigt wurde. Und abends wird zur Ermutigung dann auch gefeiert.</span></div>
+                    <div><span style="font-family: monospace; white-space: pre-wrap;">Die Gruppe besteht aus Männern und Frauen, die sich als Hobby mit dem Keltentum im 1. Jhd. v. C</span><span style="font-family: monospace; white-space: pre-wrap;">hr. befassen und dies auch mit Gleichgesinnten ausleben möchten. Neben gemeinsamen Lagerbesuchen und Handwerkereien im Sommer wird im Winter an jedem ersten Freitag im Monat ein Stammtisch abgehalten. Interessierte Besucher sind hierzu natürlich gerne eingeladen. Im Sommer freuen wir uns über Besuch auf einem unserer Lager. Die Termine und Lokalitäten sind auf dieser Seite bei "Veranstaltungen" zu finden.</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div data-silex-type="container" class="prevent-draggable container-element editable-style silex-id-1491515325968-26 section-element page-home paged-element handwerke" data-silex-id="silex-id-1491515325968-26">
+        <div data-silex-type="container" class="editable-style silex-id-1491515325967-25 container-element silex-element-content silex-container-content website-width prevent-draggable" data-silex-id="silex-id-1491515325967-25">
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <div data-silex-type="container" class="editable-style silex-id-1491515513624-31 container-element hide-on-mobile" data-silex-id="silex-id-1491515513624-31" style=""></div>
+            <div data-silex-type="container" class="editable-style container-element silex-id-1491515549485-32 hide-on-mobile" data-silex-id="silex-id-1491515549485-32" style=""></div>
+            <div data-silex-type="container" class="editable-style silex-id-1491515570342-33 container-element hide-on-mobile" data-silex-id="silex-id-1491515570342-33" style=""></div>
+            <div data-silex-type="container" class="editable-style container-element silex-id-1491515596629-34" data-silex-id="silex-id-1491515596629-34" style=""></div>
+            <div data-silex-type="container" class="editable-style silex-id-1491516663908-45 container-element silex-component silex-component-animated-container" data-silex-id="silex-id-1491516663908-45" style="">
+                <div id="id_1491938728527_125"></div>
+                <script type="text/javascript">
+                    /*
+                    animation widget from here: https://github.com/silexlabs/Silex/issues/443
+                    */
+                    $(function() {
+                      var bodyEl = $('body');
+                      // execute only outside silex editor
+                      if(!bodyEl.hasClass('silex-runtime')) return;
+                      // init ScrollReveal lib
+                      window.sr = window.sr || ScrollReveal();
+                      // animate this element on page change
+                      bodyEl.on('pageChanged', animate_1491938728527_125);
+                      // animate this element at start
+                      animate_1491938728527_125();
+                      // the function to start the animation
+                      function animate_1491938728527_125 (event, pageName) {
+                        // get the silex element in which we are
+                        var silexElement = $('#id_1491938728527_125').parent();
+                        if(// only if the element is in the dom
+                          silexElement &&
+                          // and is visible in the current page
+                          (silexElement.hasClass(bodyEl.pageable('option').currentPage) ||
+                          // or visible in all pages
+                          !silexElement.hasClass('paged-element')) &&
+                          // but never in mobile mode
+                          (!bodyEl.hasClass('enable-mobile') || $(window).width() >= 480)) {
+                          // use ScrollReveal API
+                          sr.reveal(silexElement, {
+                            origin:  'left',
+                            distance: '20px',
+                            duration: 500,
+                            delay: 0,
+                            rotate: { x: 0, y: 0, z: 0 },
+                            opacity: 0,
+                            scale: 1,
+                            easing: 'linear',
+                            reset: false,
+                            beforeReveal: function(el){
+                              
+                            },
+                            beforeReset: function(el){
+                              
+                            },
+                            afterReveal: function(el){
+                              
+                            },
+                            afterReset: function(el){
+                              
+                            }
+                          });
+                        }
+                      }
+                    })
+                </script>
+
+                <div data-silex-type="image" class="editable-style silex-id-1509573667194-14 image-element" data-silex-id="silex-id-1509573667194-14" style="" data-silex-href="#!page-f-rben"><img src="../../Teutates/master/farbe.png" class="silex-element-content"></div>
+                <div data-silex-type="text" class="editable-style silex-id-1509573877122-16 text-element" data-silex-id="silex-id-1509573877122-16" style="" data-silex-href="#!page-f-rben">
+                    <div class="silex-element-content normal">
+                        <h3 style="text-align: center;" class="heading3">Färben</h3>
+                    </div>
+                </div>
+            </div>
+            <div data-silex-type="container" class="editable-style silex-id-1491516734473-46 container-element silex-component silex-component-animated-container" data-silex-id="silex-id-1491516734473-46" style="">
+                <div id="id_1491938749613_885"></div>
+                <script type="text/javascript">
+                    /*
+                    animation widget from here: https://github.com/silexlabs/Silex/issues/443
+                    */
+                    $(function() {
+                      var bodyEl = $('body');
+                      // execute only outside silex editor
+                      if(!bodyEl.hasClass('silex-runtime')) return;
+                      // init ScrollReveal lib
+                      window.sr = window.sr || ScrollReveal();
+                      // animate this element on page change
+                      bodyEl.on('pageChanged', animate_1491938749613_885);
+                      // animate this element at start
+                      animate_1491938749613_885();
+                      // the function to start the animation
+                      function animate_1491938749613_885 (event, pageName) {
+                        // get the silex element in which we are
+                        var silexElement = $('#id_1491938749613_885').parent();
+                        if(// only if the element is in the dom
+                          silexElement &&
+                          // and is visible in the current page
+                          (silexElement.hasClass(bodyEl.pageable('option').currentPage) ||
+                          // or visible in all pages
+                          !silexElement.hasClass('paged-element')) &&
+                          // but never in mobile mode
+                          (!bodyEl.hasClass('enable-mobile') || $(window).width() >= 480)) {
+                          // use ScrollReveal API
+                          sr.reveal(silexElement, {
+                            origin:  'bottom',
+                            distance: '20px',
+                            duration: 500,
+                            delay: 0,
+                            rotate: { x: 0, y: 0, z: 0 },
+                            opacity: 0,
+                            scale: 1,
+                            easing: 'linear',
+                            reset: false,
+                            beforeReveal: function(el){
+                              
+                            },
+                            beforeReset: function(el){
+                              
+                            },
+                            afterReveal: function(el){
+                              
+                            },
+                            afterReset: function(el){
+                              
+                            }
+                          });
+                        }
+                      }
+                    })
+                </script>
+
+                <div data-silex-type="text" class="editable-style text-element silex-id-1509573927623-17" data-silex-id="silex-id-1509573927623-17" style="" data-silex-href="#!page-kettenhemdherstellung">
+                    <div class="silex-element-content normal">
+                        <h3 style="text-align: center;" class="heading3">Kettenhemdherstellung</h3>
+                    </div>
+                </div>
+                <div data-silex-type="image" class="editable-style silex-id-1509574236560-26 image-element" data-silex-id="silex-id-1509574236560-26" style="" data-silex-href="#!page-kettenhemdherstellung"><img src="../../Teutates/master/kette.png" class="silex-element-content"></div>
+            </div>
+            <div data-silex-type="container" class="editable-style silex-id-1491516774225-47 container-element silex-component silex-component-animated-container" data-silex-id="silex-id-1491516774225-47" style="">
+                <div id="id_1491938735813_375"></div>
+                <script type="text/javascript">
+                    /*
+                    animation widget from here: https://github.com/silexlabs/Silex/issues/443
+                    */
+                    $(function() {
+                      var bodyEl = $('body');
+                      // execute only outside silex editor
+                      if(!bodyEl.hasClass('silex-runtime')) return;
+                      // init ScrollReveal lib
+                      window.sr = window.sr || ScrollReveal();
+                      // animate this element on page change
+                      bodyEl.on('pageChanged', animate_1491938735813_375);
+                      // animate this element at start
+                      animate_1491938735813_375();
+                      // the function to start the animation
+                      function animate_1491938735813_375 (event, pageName) {
+                        // get the silex element in which we are
+                        var silexElement = $('#id_1491938735813_375').parent();
+                        if(// only if the element is in the dom
+                          silexElement &&
+                          // and is visible in the current page
+                          (silexElement.hasClass(bodyEl.pageable('option').currentPage) ||
+                          // or visible in all pages
+                          !silexElement.hasClass('paged-element')) &&
+                          // but never in mobile mode
+                          (!bodyEl.hasClass('enable-mobile') || $(window).width() >= 480)) {
+                          // use ScrollReveal API
+                          sr.reveal(silexElement, {
+                            origin:  'right',
+                            distance: '20px',
+                            duration: 500,
+                            delay: 0,
+                            rotate: { x: 0, y: 0, z: 0 },
+                            opacity: 0,
+                            scale: 1,
+                            easing: 'linear',
+                            reset: false,
+                            beforeReveal: function(el){
+                              
+                            },
+                            beforeReset: function(el){
+                              
+                            },
+                            afterReveal: function(el){
+                              
+                            },
+                            afterReset: function(el){
+                              
+                            }
+                          });
+                        }
+                      }
+                    })
+                </script>
+
+                <div data-silex-type="text" class="editable-style text-element silex-id-1509573936580-18" data-silex-id="silex-id-1509573936580-18" style="" data-silex-href="#!page-brettchenweben">
+                    <div class="silex-element-content normal">
+                        <h3 style="text-align: center;" class="heading3">Brettchenweben</h3>
+                    </div>
+                </div>
+                <div data-silex-type="image" class="editable-style silex-id-1509574134889-20 image-element" data-silex-id="silex-id-1509574134889-20" style="" data-silex-href="#!page-brettchenweben"><img src="../../Teutates/master/brett.png" class="silex-element-content"></div>
+            </div>
+            <div data-silex-type="text" class="editable-style silex-id-1509573794703-15 text-element" data-silex-id="silex-id-1509573794703-15" style="">
+                <div class="silex-element-content normal">
+                    <h3 style="text-align: center;" class="heading3">Unsere Handwerke</h3>
+                </div>
+            </div>
+            <div data-silex-type="container" class="editable-style silex-id-1491516807859-48 container-element silex-component silex-component-animated-container" data-silex-id="silex-id-1491516807859-48" style="">
+                <div id="id_1491938718641_502"></div>
+                <script type="text/javascript">
+                    /*
+                    animation widget from here: https://github.com/silexlabs/Silex/issues/443
+                    */
+                    $(function() {
+                      var bodyEl = $('body');
+                      // execute only outside silex editor
+                      if(!bodyEl.hasClass('silex-runtime')) return;
+                      // init ScrollReveal lib
+                      window.sr = window.sr || ScrollReveal();
+                      // animate this element on page change
+                      bodyEl.on('pageChanged', animate_1491938718641_502);
+                      // animate this element at start
+                      animate_1491938718641_502();
+                      // the function to start the animation
+                      function animate_1491938718641_502 (event, pageName) {
+                        // get the silex element in which we are
+                        var silexElement = $('#id_1491938718641_502').parent();
+                        if(// only if the element is in the dom
+                          silexElement &&
+                          // and is visible in the current page
+                          (silexElement.hasClass(bodyEl.pageable('option').currentPage) ||
+                          // or visible in all pages
+                          !silexElement.hasClass('paged-element')) &&
+                          // but never in mobile mode
+                          (!bodyEl.hasClass('enable-mobile') || $(window).width() >= 480)) {
+                          // use ScrollReveal API
+                          sr.reveal(silexElement, {
+                            origin:  'bottom',
+                            distance: '20px',
+                            duration: 500,
+                            delay: 0,
+                            rotate: { x: 0, y: 0, z: 0 },
+                            opacity: 0,
+                            scale: 1,
+                            easing: 'linear',
+                            reset: false,
+                            beforeReveal: function(el){
+                              
+                            },
+                            beforeReset: function(el){
+                              
+                            },
+                            afterReveal: function(el){
+                              
+                            },
+                            afterReset: function(el){
+                              
+                            }
+                          });
+                        }
+                      }
+                    })
+                </script>
+
+                <div data-silex-type="text" class="editable-style text-element silex-id-1509573939929-19" data-silex-id="silex-id-1509573939929-19" style="" data-silex-href="#!page-gewichtweben">
+                    <div class="silex-element-content normal">
+                        <h3 style="text-align: center;" class="heading3">Gewichtsweben</h3>
+                    </div>
+                </div>
+                <div data-silex-type="image" class="editable-style silex-id-1509574168262-22 image-element" data-silex-id="silex-id-1509574168262-22" style="" data-silex-href="#!page-gewichtweben"><img src="../../Teutates/master/gewicht.png" class="silex-element-content"></div>
+            </div>
+            <div data-silex-type="container" class="editable-style container-element silex-component silex-component-animated-container silex-id-1509574323042-40" data-silex-id="silex-id-1509574323042-40" style="">
+                <div id="id_1509574323043_119"></div>
+                <script type="text/javascript">
+                    /*
+                    animation widget from here: https://github.com/silexlabs/Silex/issues/443
+                    */
+                    $(function() {
+                      var bodyEl = $('body');
+                      // execute only outside silex editor
+                      if(!bodyEl.hasClass('silex-runtime')) return;
+                      // init ScrollReveal lib
+                      window.sr = window.sr || ScrollReveal();
+                      // animate this element on page change
+                      bodyEl.on('pageChanged', animate_1509574323043_119);
+                      // animate this element at start
+                      animate_1509574323043_119();
+                      // the function to start the animation
+                      function animate_1509574323043_119 (event, pageName) {
+                        // get the silex element in which we are
+                        var silexElement = $('#id_1509574323043_119').parent();
+                        if(// only if the element is in the dom
+                          silexElement &&
+                          // and is visible in the current page
+                          (silexElement.hasClass(bodyEl.pageable('option').currentPage) ||
+                          // or visible in all pages
+                          !silexElement.hasClass('paged-element')) &&
+                          // but never in mobile mode
+                          (!bodyEl.hasClass('enable-mobile') || $(window).width() >= 480)) {
+                          // use ScrollReveal API
+                          sr.reveal(silexElement, {
+                            origin:  'left',
+                            distance: '20px',
+                            duration: 500,
+                            delay: 0,
+                            rotate: { x: 0, y: 0, z: 0 },
+                            opacity: 0,
+                            scale: 1,
+                            easing: 'linear',
+                            reset: false,
+                            beforeReveal: function(el){
+                              
+                            },
+                            beforeReset: function(el){
+                              
+                            },
+                            afterReveal: function(el){
+                              
+                            },
+                            afterReset: function(el){
+                              
+                            }
+                          });
+                        }
+                      }
+                    })
+                </script>
+                <div data-silex-type="image" class="editable-style silex-id-1509574215626-25 image-element" data-silex-id="silex-id-1509574215626-25" style="" data-silex-href="#!page-t-pfern"><img src="../../Teutates/master/toepfern.png" class="silex-element-content"></div>
+                <div data-silex-type="text" class="editable-style text-element silex-id-1509574776881-55" data-silex-id="silex-id-1509574776881-55" style="" data-silex-href="#!page-t-pfern">
+                    <div class="silex-element-content normal">
+                        <h3 style="text-align: center;" class="heading3">Töpfern</h3>
+                    </div>
+                </div>
+            </div>
+            <div data-silex-type="container" class="editable-style container-element silex-component silex-component-animated-container silex-id-1509574332646-43" data-silex-id="silex-id-1509574332646-43" style="">
+                <div id="id_1509574332647_77"></div>
+                <script type="text/javascript">
+                    /*
+                    animation widget from here: https://github.com/silexlabs/Silex/issues/443
+                    */
+                    $(function() {
+                      var bodyEl = $('body');
+                      // execute only outside silex editor
+                      if(!bodyEl.hasClass('silex-runtime')) return;
+                      // init ScrollReveal lib
+                      window.sr = window.sr || ScrollReveal();
+                      // animate this element on page change
+                      bodyEl.on('pageChanged', animate_1509574332647_77);
+                      // animate this element at start
+                      animate_1509574332647_77();
+                      // the function to start the animation
+                      function animate_1509574332647_77 (event, pageName) {
+                        // get the silex element in which we are
+                        var silexElement = $('#id_1509574332647_77').parent();
+                        if(// only if the element is in the dom
+                          silexElement &&
+                          // and is visible in the current page
+                          (silexElement.hasClass(bodyEl.pageable('option').currentPage) ||
+                          // or visible in all pages
+                          !silexElement.hasClass('paged-element')) &&
+                          // but never in mobile mode
+                          (!bodyEl.hasClass('enable-mobile') || $(window).width() >= 480)) {
+                          // use ScrollReveal API
+                          sr.reveal(silexElement, {
+                            origin:  'left',
+                            distance: '20px',
+                            duration: 500,
+                            delay: 0,
+                            rotate: { x: 0, y: 0, z: 0 },
+                            opacity: 0,
+                            scale: 1,
+                            easing: 'linear',
+                            reset: false,
+                            beforeReveal: function(el){
+                              
+                            },
+                            beforeReset: function(el){
+                              
+                            },
+                            afterReveal: function(el){
+                              
+                            },
+                            afterReset: function(el){
+                              
+                            }
+                          });
+                        }
+                      }
+                    })
+                </script>
+                <div data-silex-type="image" class="editable-style silex-id-1509574144892-21 image-element" data-silex-id="silex-id-1509574144892-21" style="" data-silex-href="#!page-metallarbeiten"><img src="../../Teutates/master/metall.png" class="silex-element-content"></div>
+                <div data-silex-type="text" class="editable-style text-element silex-id-1509574779783-56" data-silex-id="silex-id-1509574779783-56" style="" data-silex-href="#!page-metallarbeiten">
+                    <div class="silex-element-content normal">
+                        <h3 style="text-align: center;" class="heading3">Metallarbeiten</h3>
+                    </div>
+                </div>
+            </div>
+            <div data-silex-type="container" class="editable-style container-element silex-component silex-component-animated-container silex-id-1509574334845-46" data-silex-id="silex-id-1509574334845-46" style="">
+                <div id="id_1509574334846_613"></div>
+                <script type="text/javascript">
+                    /*
+                    animation widget from here: https://github.com/silexlabs/Silex/issues/443
+                    */
+                    $(function() {
+                      var bodyEl = $('body');
+                      // execute only outside silex editor
+                      if(!bodyEl.hasClass('silex-runtime')) return;
+                      // init ScrollReveal lib
+                      window.sr = window.sr || ScrollReveal();
+                      // animate this element on page change
+                      bodyEl.on('pageChanged', animate_1509574334846_613);
+                      // animate this element at start
+                      animate_1509574334846_613();
+                      // the function to start the animation
+                      function animate_1509574334846_613 (event, pageName) {
+                        // get the silex element in which we are
+                        var silexElement = $('#id_1509574334846_613').parent();
+                        if(// only if the element is in the dom
+                          silexElement &&
+                          // and is visible in the current page
+                          (silexElement.hasClass(bodyEl.pageable('option').currentPage) ||
+                          // or visible in all pages
+                          !silexElement.hasClass('paged-element')) &&
+                          // but never in mobile mode
+                          (!bodyEl.hasClass('enable-mobile') || $(window).width() >= 480)) {
+                          // use ScrollReveal API
+                          sr.reveal(silexElement, {
+                            origin:  'left',
+                            distance: '20px',
+                            duration: 500,
+                            delay: 0,
+                            rotate: { x: 0, y: 0, z: 0 },
+                            opacity: 0,
+                            scale: 1,
+                            easing: 'linear',
+                            reset: false,
+                            beforeReveal: function(el){
+                              
+                            },
+                            beforeReset: function(el){
+                              
+                            },
+                            afterReveal: function(el){
+                              
+                            },
+                            afterReset: function(el){
+                              
+                            }
+                          });
+                        }
+                      }
+                    })
+                </script>
+                <div data-silex-type="image" class="editable-style silex-id-1509574190818-24 image-element" data-silex-id="silex-id-1509574190818-24" style="" data-silex-href="#!page-bronzeguss"><img src="../../Teutates/master/bronze.png" class="silex-element-content"></div>
+                <div data-silex-type="text" class="editable-style text-element silex-id-1509574782671-57" data-silex-id="silex-id-1509574782671-57" style="" data-silex-href="#!page-bronzeguss">
+                    <div class="silex-element-content normal">
+                        <h3 style="text-align: center;" class="heading3">Bronzeguss</h3>
+                    </div>
+                </div>
+            </div>
+            <div data-silex-type="container" class="editable-style container-element hide-on-mobile silex-id-1509574461313-49" data-silex-id="silex-id-1509574461313-49" style=""></div>
+            <div data-silex-type="container" class="editable-style container-element hide-on-mobile silex-id-1509574464660-50" data-silex-id="silex-id-1509574464660-50" style=""></div>
+            <div data-silex-type="container" class="editable-style container-element hide-on-mobile silex-id-1509574481404-51" data-silex-id="silex-id-1509574481404-51" style=""></div>
+            <div data-silex-type="container" class="editable-style container-element hide-on-mobile silex-id-1509574486184-52" data-silex-id="silex-id-1509574486184-52" style=""></div>
+            <div data-silex-type="container" class="editable-style container-element hide-on-mobile silex-id-1509574574081-53" data-silex-id="silex-id-1509574574081-53" style=""></div>
+            <div data-silex-type="container" class="editable-style container-element hide-on-mobile silex-id-1509574641715-54" data-silex-id="silex-id-1509574641715-54" style=""></div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div data-silex-type="container" class="prevent-draggable container-element editable-style silex-id-1491515759410-36 section-element page-home paged-element contact" data-silex-id="silex-id-1491515759410-36">
+        <div data-silex-type="container" class="editable-style silex-id-1491515759409-35 container-element silex-element-content silex-container-content website-width prevent-draggable" data-silex-id="silex-id-1491515759409-35">
+
+            <div data-silex-type="text" class="editable-style text-element silex-id-1491515891360-38" data-silex-id="silex-id-1491515891360-38">
+                <div class="silex-element-content normal">
+                    <p>
+                        <font color="#ffffff">
+                            <font size="7">Kontakt</font><br></font>
+                        <font size="4">Keltengruppe Teutates e.V.<br></font>
+                        <font size="4">Anschrift Straße 17<br></font>
+                        <font size="4">PLZ Stadt</font>
+                    </p>
+                    <div>
+                        <p class="normal">
+
+                            <font color="#ffffff" style="font-weight: lighter;"><a href="mailto:info@teutatesnet.de" style="font-weight: lighter;">info@teutatesnet.de</a></font>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div data-silex-type="html" class="editable-style silex-id-1491515806933-37 html-element silex-component silex-component-form silex-use-height-not-minheight" data-silex-id="silex-id-1491515806933-37" style="">
+                <div class="silex-element-content">
+                    <form id="id_1509575884747_777" action="https://formspree.io/info@teutatesnet.de" method="POST">
+
+                        <div>
+                            <label for="field1">Name</label>
+                            <input type="text" required="" id="field1" name="field1" placeholder="Ihr Name">
+                        </div>
+
+
+                        <div>
+                            <label for="field2">Email-Adresse</label>
+                            <input type="text" required="" id="field2" name="field2" placeholder="Ihre Emailadresse">
+                        </div>
+
+
+                        <div class="fill-vertical">
+                            <label for="field3">Nachricht</label>
+                            <textarea required="" id="field3" name="field3" placeholder="Was möchten Sie uns mitteilen?"></textarea>
+                        </div>
+
+                        <input type="submit" value="Absenden">
+                    </form>
+                    <style>
+                        #id_1509575884747_777 input[type=text],
+                        select {
+                            width: 100%;
+                            padding: 12px 20px;
+                            margin: 8px 0;
+                            display: inline-block;
+                            border: 1px solid #ccc;
+                            border-radius: 3px;
+                            box-sizing: border-box;
+                        }
+                        
+                        #id_1509575884747_777 input[type=submit] {
+                            width: 100%;
+                            background-color: #3093b2;
+                            color: #FFFFFF;
+                            padding: 14px 20px;
+                            margin: 8px 0;
+                            border: 1px solid #4CAF50;
+                            border-radius: 3px;
+                            cursor: pointer;
+                        }
+                        
+                        #id_1509575884747_777 label {
+                            color: #ffffff;
+                        }
+                        /* *************************** */
+                        /* resize the 3rd field
+   and fill the vertical space */
+                        
+                        #id_1509575884747_777 .fill-vertical {
+                            flex: 1 1 auto;
+                            display: flex;
+                            flex-direction: column;
+                        }
+                        
+                        #id_1509575884747_777 .fill-vertical textarea {
+                            flex: 1 1 auto;
+                            width: 100%;
+                            height: 150px;
+                            padding: 12px 20px;
+                            box-sizing: border-box;
+                            border: 2px solid #ccc;
+                            border-radius: 3px;
+                            background-color: #f8f8f8;
+                            font-size: 16px;
+                            resize: none;
+                        }
+                        /* ************************ */
+                        
+                        #id_1509575884747_777 {
+                            border-radius: 3px;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: space-between;
+                            height: 100%;
+                        }
+                    </style>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <div data-silex-type="container" class="prevent-draggable container-element editable-style silex-id-1509575118673-60 section-element page-die-kelten paged-element" data-silex-id="silex-id-1509575118673-60">
+        <div data-silex-type="container" class="editable-style silex-id-1509575118672-59 container-element silex-element-content silex-container-content website-width prevent-draggable" data-silex-id="silex-id-1509575118672-59">
+            <div data-silex-type="text" class="editable-style text-element silex-id-1509575149077-62" data-silex-id="silex-id-1509575149077-62" style="">
+                <div class="silex-element-content normal"><span style="font-family: monospace; white-space: pre-wrap;">Schon seit über 600 Jahren siedelten von Spanien bis Böhmen verschiedene keltische Stämme und hinterließen ihre Spuren. Zeugnisse davon finden sich im Rhein-Main-Gebiet beispielsweise im Frankfurter Stadtwald, am Glauberg/Wetterau, am Heidetränk-Oppidum/Taunus, in Waldalgesheim/Rheinhessen und in Bad Nauheim, um nur einige zu nennen.</span>
+                    <div><span style="font-family: monospace; white-space: pre-wrap;"><br></span></div>
+                    <div><span style="font-family: monospace; white-space: pre-wrap;">Zur Zeit des Gallischen Krieges (58 - 51 v. Chr.) gab es in dem Gebiet entlang des Rheins zwischen Koblenz und Worms Wanderbewegungen verschiedener Stämme. Einerseits wurden linksrheinische Stämme fast vollständig vernichtet, andererseits wurden rechtsrheinische Stämme von Cäsar dort angesiedelt, weil sie sich der römischen Hoheit unterwarfen und so halfen, diese Grenze zu sichern. Andere wanderten aus dem Osten ein und nahmen unbewohntes Land in Besitz. Die Namen dieser Stämme sind bekannt geworden durch Cäsars Aufzeichnungen in der "Bello Gallico" oder historischen Aufzeichnungen wie die z.B. von Poseidonis und Tacitus. Namentlich dabei sind rechtsrheinisch die Vangiones, Mattiaker, Tenkterer und Chatten zu nennen.</span></div>
+                    <div><span style="font-family: monospace; white-space: pre-wrap;"><br></span></div>
+                    <div><span style="font-family: monospace; white-space: pre-wrap;">Aus politischen Gründen, oder weil er es nicht besser wusste, bezeichnete Cäsar alle Bewohner rechts des Rheins als Germanen, womit er alle dort lebenden Stämme meinte. Allerdings ist inzwischen hinreichend bekannt, dass diese dort lebenden Stämme aufgrund kulturellerer und handwerklicher Fertigkeiten auch zu dem keltischen Kulturraum gezählt werden.</span></div>
+                    <div><span style="font-family: monospace; white-space: pre-wrap;"><br></span></div>
+                    <div><span style="font-family: monospace; white-space: pre-wrap;">Bevor Cäsar in Gallien einfiel, lebten die Kelten in ihrer Tradition der Stämme, ihrer Religion und ihrer Gesetze. Diese Tradition möchten wir als Keltengruppe Teutates wieder aufleben lassen.</span></div>
+                    <div><span style="font-family: monospace; white-space: pre-wrap;"><br></span></div>
+                    <div><span style="font-family: monospace; white-space: pre-wrap;">Auf regelmäßigen Lagern wird von unseren Handwerkern alles hergestellt, was zum Leben und Kämpfen benötigt wurde. Und abends wird zur Ermutigung dann auch gefeiert.</span></div>
+                    <div><span style="font-family: monospace; white-space: pre-wrap;">Die Gruppe besteht aus Männern und Frauen, die sich als Hobby mit dem Keltentum im 1. Jhd. v. C</span><span style="font-family: monospace; white-space: pre-wrap;">hr. befassen und dies auch mit Gleichgesinnten ausleben möchten. Neben gemeinsamen Lagerbesuchen und Handwerkereien im Sommer wird im Winter an jedem ersten Freitag im Monat ein Stammtisch abgehalten. Interessierte Besucher sind hierzu natürlich gerne eingeladen. Im Sommer freuen wir uns über Besuch auf einem unserer Lager. Die Termine und Lokalitäten sind auf dieser Seite bei "Veranstaltungen" zu finden.</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div data-silex-type="container" class="prevent-draggable container-element editable-style silex-id-1509578848755-80 section-element page-f-rben paged-element" data-silex-id="silex-id-1509578848755-80">
+        <div data-silex-type="container" class="editable-style silex-id-1509578848753-79 container-element silex-element-content silex-container-content website-width prevent-draggable" data-silex-id="silex-id-1509578848753-79">
+            <div data-silex-type="text" class="editable-style silex-id-1509578869693-81 text-element" data-silex-id="silex-id-1509578869693-81" style="">
+                <div class="silex-element-content normal">
+                    <h3 class="heading3">Färben</h3>
+                    <div>
+                        <p>Der Wunsch, Gegenstände mit bunten Farben zu verzieren, ist fast so alt wie die Menschheit selbst. Nachweise davon zeigen uns die 30.000 Jahre alten Höhlenmalereien in Frankreich. Hier wurden mit Erde und Mineralien die ältesten
+                            bekannten Bilder gemalt.</p>
+                        <p>
+
+
+                            <style type="text/css">
+                                @page {
+                                    margin: 2cm
+                                }
+                                
+                                td p {
+                                    margin-bottom: 0cm
+                                }
+                                
+                                p {
+                                    margin-bottom: 0.25cm;
+                                    line-height: 120%
+                                }
+                                
+                                a:link {
+                                    so-language: zxx
+                                }
+                            </style>
+
+
+                        </p>
+                        <p>Ab ca. 3.000 v. Chr. findet man die ersten gefärbten Textilien. Die Kelten verwendeten ab dem 8. Jhd. v. Chr. pflanzliche und tierische Materialien, um ihre Stoffe zu färben. Die Tuche aus dem Fürstengrab in Hochdorf im 5. Jhd.
+                            v. Chr. wurden z. B. mit der Kermes-Laus (rot), dem Färberwaid (blau) oder dem Färberwau (gelb) gefärbt. Bis ins Mittelalter wurden die einheimischen Pflanzen zur Färbung verwendet, danach kamen mit den Kreuzzügen und der Entdeckung
+                            Amerikas noch unzählige neue Farbtöne dazu. Mit der Erfindung der synthetischen Farben im 19. Jhd. wurde das Färben mit natürlichen Produkten in den Hintergrund gedrängt, bis es ganz verschwand.
+                        </p>
+                        <p>
+
+
+                            <style type="text/css">
+                                @page {
+                                    margin: 2cm
+                                }
+                                
+                                td p {
+                                    margin-bottom: 0cm
+                                }
+                                
+                                p {
+                                    margin-bottom: 0.25cm;
+                                    line-height: 120%
+                                }
+                                
+                                a:link {
+                                    so-language: zxx
+                                }
+                            </style>
+
+
+                        </p>
+                        <p>Hier möchten wir unser wiedererlangtes Wissen über das Färben mit Pflanzen weitergeben. Die verwendeten Materialien sind allerdings nicht immer nur in der keltischen Zeit zu finden. Wir probieren auch mit "neuzeitlichen" Pflanzen,
+                            schöne Farbergebnisse zu erzielen.
+                        </p>
+                        <p>
+
+
+                            <style type="text/css">
+                                @page {
+                                    margin: 2cm
+                                }
+                                
+                                td p {
+                                    margin-bottom: 0cm
+                                }
+                                
+                                p {
+                                    margin-bottom: 0.25cm;
+                                    line-height: 120%
+                                }
+                                
+                                a:link {
+                                    so-language: zxx
+                                }
+                            </style>
+
+
+                        </p>
+                        <p>Folgende Arbeitsschritte sind im Allgemeinen notwendig, um Wolle zu färben. Eine kurze Beschreibung unserer Färberrezepte gibt es zum jeweiligen gefärbten Wollstrang. Es gibt aber auch noch viele andere Vor- oder Nachbehandlungsmethoden,
+                            um verschiedene Farbtöne zu bekommen. Dies kann man im Internet oder in verschiedenen Büchern nachlesen.
+                        </p>
+                        <p>
+
+
+                            <style type="text/css">
+                                @page {
+                                    margin: 2cm
+                                }
+                                
+                                td p {
+                                    margin-bottom: 0cm
+                                }
+                                
+                                p {
+                                    margin-bottom: 0.25cm;
+                                    line-height: 120%
+                                }
+                                
+                                a:link {
+                                    so-language: zxx
+                                }
+                            </style>
+
+
+                        </p>
+                        <p>Die Wolle muss vor dem Färben gereinigt werden. Am besten wäscht man sie in lauwarmem Wasser mit etwas Seife aus, so dass sich der grobe Schmutz lässt.</p>
+                        <p>
+
+
+                            <style type="text/css">
+                                @page {
+                                    margin: 2cm
+                                }
+                                
+                                td p {
+                                    margin-bottom: 0cm
+                                }
+                                
+                                p {
+                                    margin-bottom: 0.25cm;
+                                    line-height: 120%
+                                }
+                                
+                                a:link {
+                                    so-language: zxx
+                                }
+                            </style>
+
+
+                        </p>
+                        <p>Die einzelnen Haare der Wolle besitzen eine schuppige Oberfläche. Um diese zu öffnen und die Farbe in die Faser zu lassen, benötigt man Hilfsmittel zum Vorbeizen. Wir nehmen dazu Alaun. Dazu nimmt man ca. 10 Gramm Alaun auf 100
+                            Gramm Wolle. Man lässst das Alaun in Wasser auf und gibt dann die Wolle dazu. Die Wolle sollte locker im Wasser schwimmen können. Dann erhitzt man das ganze vorsichtig, bis das Wasser leicht kocht und lässt es eine Stunde köcheln.
+                            Dabei sollte man immer wieder die Wolle vorsichtig im Wasser bewegen und auf keinen Fall wild rühren, da sie sonst verfilzt.</p>
+                        <p>
+
+
+                            <style type="text/css">
+                                @page {
+                                    margin: 2cm
+                                }
+                                
+                                td p {
+                                    margin-bottom: 0cm
+                                }
+                                
+                                p {
+                                    margin-bottom: 0.25cm;
+                                    line-height: 120%
+                                }
+                                
+                                a:link {
+                                    so-language: zxx
+                                }
+                            </style>
+
+
+                        </p>
+                        <p>Nach dem Alaunbad gut auswaschen, dabei aber auf die Temperatur achten. Mit heißem Wasser beginnen und nur langsam Kühleres nehmen, da auch hier wieder die Gefahr des Filzens besteht.</p>
+                        <p>
+
+
+                            <style type="text/css">
+                                @page {
+                                    margin: 2cm
+                                }
+                                
+                                td p {
+                                    margin-bottom: 0cm
+                                }
+                                
+                                p {
+                                    margin-bottom: 0.25cm;
+                                    line-height: 120%
+                                }
+                                
+                                a:link {
+                                    so-language: zxx
+                                }
+                            </style>
+
+
+                        </p>
+                        <p>Grundsätzlich ist es meistens der gleiche Vorgang: Auskochen des Pflanzenmaterials, abseihen und dann die Wolle ins Färbewasser und wieder ca. eine Stunde köcheln.</p>
+                        <p>Die Wolle gut auswaschen, dabei wieder darauf achten, dass sie keinen Temperaturschock bekommt, sprich mit heißem Wasser anfangen und dann langsam Kühleres nehmen.</p>
+                        <p>
+
+
+                            <style type="text/css">
+                                @page {
+                                    margin: 2cm
+                                }
+                                
+                                td p {
+                                    margin-bottom: 0cm
+                                }
+                                
+                                p {
+                                    margin-bottom: 0.25cm;
+                                    line-height: 120%
+                                }
+                                
+                                a:link {
+                                    so-language: zxx
+                                }
+                            </style>
+
+
+                        </p>
+                        <p>Nach dem Trocknen muss die Wolle nun noch gekämmt werden und dann steht dem Spinnen nichts mehr im Wege.</p>
+
+
+                        <style type="text/css">
+                            @page {
+                                margin: 2cm
+                            }
+                            
+                            td p {
+                                margin-bottom: 0cm
+                            }
+                            
+                            p {
+                                margin-bottom: 0.25cm;
+                                line-height: 120%
+                            }
+                            
+                            a:link {
+                                so-language: zxx
+                            }
+                        </style>
+
+
+                    </div>
+                    <style type="text/css">
+                        @page {
+                            margin: 2cm
+                        }
+                        
+                        td p {
+                            margin-bottom: 0cm
+                        }
+                        
+                        p {
+                            margin-bottom: 0.25cm;
+                            line-height: 120%
+                        }
+                        
+                        a:link {
+                            so-language: zxx
+                        }
+                    </style>
+                </div>
+            </div>
+            <div data-silex-type="container" class="editable-style silex-id-1509579205625-82 container-element" data-silex-id="silex-id-1509579205625-82" style="">
+                <div data-silex-type="image" class="editable-style silex-id-1509579623882-83 image-element" data-silex-id="silex-id-1509579623882-83" style=""><img src="../../Teutates/master/farbe.png" class="silex-element-content"></div>
+            </div>
+        </div>
+    </div>
+    <div data-silex-type="container" class="prevent-draggable container-element editable-style silex-id-1509576420641-67 section-element hide-on-mobile page-f-rben paged-element page-brettchenweben page-kettenhemdherstellung page-gewichtweben page-t-pfern page-metallarbeiten page-bronzeguss"
+        data-silex-id="silex-id-1509576420641-67">
+        <div data-silex-type="container" class="editable-style silex-id-1509576420640-66 container-element silex-element-content silex-container-content website-width prevent-draggable" data-silex-id="silex-id-1509576420640-66">
+            <div data-silex-type="text" class="editable-style text-element silex-id-1509576524496-70" data-silex-id="silex-id-1509576524496-70" style="" data-silex-href="#!page-gewichtweben">
+                <div class="silex-element-content normal">
+                    <p style="text-align: center;" class="normal">Gewichtsweben</p>
+                </div>
+            </div>
+            <div data-silex-type="text" class="editable-style silex-id-1509576444756-68 text-element" data-silex-id="silex-id-1509576444756-68" style="" data-silex-href="#!page-f-rben">
+                <div class="silex-element-content normal">
+                    <p style="text-align: center;" class="normal">Färben</p>
+                </div>
+            </div>
+            <div data-silex-type="text" class="editable-style text-element silex-id-1509576601423-74" data-silex-id="silex-id-1509576601423-74" style="" data-silex-href="#!page-bronzeguss">
+                <div class="silex-element-content normal">
+                    <p style="text-align: center;" class="normal">Bronzeguss</p>
+                </div>
+            </div>
+            <div data-silex-type="text" class="editable-style text-element silex-id-1509576592326-73" data-silex-id="silex-id-1509576592326-73" style="" data-silex-href="#!page-metallarbeiten">
+                <div class="silex-element-content normal">
+                    <p style="text-align: center;" class="normal">Metallarbeiten</p>
+                </div>
+            </div>
+            <div data-silex-type="text" class="editable-style text-element silex-id-1509576570715-72" data-silex-id="silex-id-1509576570715-72" style="" data-silex-href="#!page-t-pfern">
+                <div class="silex-element-content normal">
+                    <p style="text-align: center;" class="normal">Töpfern</p>
+                </div>
+            </div>
+            <div data-silex-type="text" class="editable-style text-element silex-id-1509576536540-71" data-silex-id="silex-id-1509576536540-71" style="" data-silex-href="#!page-kettenhemdherstellung">
+                <div class="silex-element-content normal">
+                    <p style="text-align: center;" class="normal">Kettenhemdherstellung</p>
+                </div>
+            </div>
+            <div data-silex-type="text" class="editable-style text-element silex-id-1509576486693-69" data-silex-id="silex-id-1509576486693-69" style="" data-silex-href="#!page-brettchenweben">
+                <div class="silex-element-content normal">
+                    <p style="text-align: center;" class="normal">Brettchenweben</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div data-silex-type="container" class="prevent-draggable container-element editable-style silex-id-1491511864480-12 section-element" data-silex-id="silex-id-1491511864480-12">
+        <div data-silex-type="container" class="editable-style silex-id-1491511864479-11 container-element silex-element-content silex-container-content website-width prevent-draggable" data-silex-id="silex-id-1491511864479-11">
+
+
+            <div data-silex-type="text" class="editable-style silex-id-1509576103007-64 text-element" data-silex-id="silex-id-1509576103007-64" style="" data-silex-href="#!page-impressum">
+                <div class="silex-element-content normal">Impressum</div>
+            </div>
+            <div data-silex-type="text" class="editable-style silex-id-1509576150812-65 text-element" data-silex-id="silex-id-1509576150812-65" style="">
+                <div class="silex-element-content normal">Copyright&nbsp;© 2017 Teutates e.V. All Rights Reserved.</div>
+            </div>
+        </div>
+    </div>
+    <div data-silex-type="container" class="prevent-draggable container-element editable-style silex-id-1509578576302-76 section-element page-f-rben paged-element" data-silex-id="silex-id-1509578576302-76">
+        <div data-silex-type="container" class="editable-style silex-id-1509578576301-75 container-element silex-element-content silex-container-content website-width prevent-draggable" data-silex-id="silex-id-1509578576301-75">
+            <div data-silex-type="text" class="editable-style silex-id-1509578582281-77 text-element page-f-rben paged-element" data-silex-id="silex-id-1509578582281-77" style="">
+                <div class="silex-element-content normal">New text box</div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+</html>
